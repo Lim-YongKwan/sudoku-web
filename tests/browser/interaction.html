@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>입력·상태 검증 · 개발 전용</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../styles/main.css">
+  <script type="module" src="./interaction-checks.js"></script>
+</head>
+<body>
+<main class="game-shell">
+  <header class="page-header">
+    <p class="eyebrow">DEVELOPMENT FIXTURE</p>
+    <h1>입력·상태 검증</h1>
+    <p class="intro">고정 store를 사용하는 개발 전용 화면입니다.</p>
+  </header>
+  <div class="fixture-controls">
+    <button type="button" id="load-input">일반 입력 fixture</button>
+    <button type="button" id="load-complete">완료 직전 fixture</button>
+    <button type="button" id="load-failure">생성 실패 fixture</button>
+  </div>
+  <section class="board-card" id="input-scope">
+    <h2>키보드·터치·메모 검사</h2>
+    <label for="outside-text">외부 텍스트 입력</label>
+    <input id="outside-text" type="text" placeholder="숫자·삭제·방향키를 입력하세요">
+    <label for="outside-select">외부 선택</label>
+    <select id="outside-select"><option>첫 번째</option><option>두 번째</option></select>
+    <p id="interaction-status" class="status-message" role="status"></p>
+    <div id="interaction-board" role="group" aria-label="입력 검증용 스도쿠"></div>
+    <p class="conflict-message" data-conflicts role="status" aria-live="polite"></p>
+    <div class="number-pad" role="group" aria-label="숫자 입력">
+      <button type="button" data-digit="1">1</button>
+      <button type="button" data-digit="2">2</button>
+      <button type="button" data-digit="3">3</button>
+      <button type="button" data-digit="4">4</button>
+      <button type="button" data-digit="5">5</button>
+      <button type="button" data-digit="6">6</button>
+      <button type="button" data-digit="7">7</button>
+      <button type="button" data-digit="8">8</button>
+      <button type="button" data-digit="9">9</button>
+    </div>
+    <div class="input-actions" role="group" aria-label="입력 도구">
+      <button type="button" data-input-action="clear">지우기</button>
+      <button type="button" data-input-action="notes" aria-pressed="false">메모</button>
+    </div>
+  </section>
+  <pre id="interaction-report" class="fixture-report">초기화 중</pre>
+  <p class="board-help">완료 직전 fixture는 선택된 1행 3열에 4를 입력하면 완성됩니다. 타이머 표시·완료 dialog는 후속 범위입니다.</p>
+</main>
+</body>
+</html>

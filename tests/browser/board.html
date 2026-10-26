@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>보드 표시 검증 · 개발 전용</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <script type="module" src="./board-checks.js"></script>
+  </head>
+  <body>
+    <main class="game-shell" aria-labelledby="page-title">
+      <header class="page-header">
+        <p class="eyebrow">DEVELOPMENT FIXTURE</p>
+        <h1 id="page-title">보드 표시 검증</h1>
+        <p class="intro">고정 데이터 검증 페이지입니다. 실제 생성 퍼즐은 <a href="/">게임 화면</a>에서 확인하세요.</p>
+      </header>
+      <div class="fixture-controls">
+        <button id="rerender-check" type="button">포커스·재렌더 검사</button>
+        <button id="failure-check" type="button">실패 결과 주입</button>
+        <button id="restore-fixture" type="button">고정 보드 복원</button>
+      </div>
+      <section class="board-card" aria-labelledby="fixture-title">
+        <div class="board-heading"><h2 id="fixture-title">고정 유일해 보드</h2><span class="difficulty-tag">검증용</span></div>
+        <p id="fixture-help" class="board-help">개발자 도구에서 viewport를 320px·1280px로 바꿔 가로 넘침·정사각 셀·굵은 경계와 Tab 포커스를 확인하세요.</p>
+        <p id="fixture-status" role="status" class="status-message">고정 fixture 표시</p>
+        <div id="fixture-board" role="group" aria-label="검증용 스도쿠 9행 9열 보드" aria-describedby="fixture-help"></div>
+      </section>
+      <pre id="fixture-report" class="fixture-report" role="status">검사 준비 중</pre>
+    </main>
+  </body>
+</html>

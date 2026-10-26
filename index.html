@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f5f4ed">
+    <title>스도쿠 · 오늘의 작은 집중</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23254338'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='44' fill='white'%3E9%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="./styles/main.css">
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <main class="game-shell" aria-labelledby="page-title">
+      <header class="page-header">
+        <p class="eyebrow">SUDOKU</p>
+        <h1 id="page-title">오늘의 작은 집중</h1>
+        <p class="intro">한 칸씩, 천천히 생각하는 시간.</p>
+      </header>
+      <section class="board-card" data-game-input aria-labelledby="board-title">
+        <div class="board-heading">
+          <h2 id="board-title">스도쿠</h2>
+          <span class="difficulty-tag" data-active-difficulty aria-label="현재 퍼즐 난이도">준비 중</span>
+        </div>
+        <div class="game-controls">
+          <label for="difficulty">다음 게임 난이도
+            <select id="difficulty" data-difficulty aria-describedby="difficulty-help">
+              <option value="easy">쉬움</option><option value="normal">보통</option><option value="hard">어려움</option>
+            </select>
+          </label>
+          <button type="button" data-new-game>새 게임</button>
+          <p class="elapsed">경과 시간 <span data-elapsed role="timer" aria-live="off">00:00</span></p>
+        </div>
+        <p id="difficulty-help" class="board-help">간이 난이도는 빈칸 수 기준입니다. 선택은 새 게임부터 적용됩니다.</p>
+        <p id="board-help" class="board-help">칸을 선택한 뒤 1~9로 입력하세요. 방향키로 이동하고 Backspace·Delete로 지울 수 있습니다.</p>
+        <p id="module-status" class="status-message" role="status" aria-live="polite" data-state="loading">퍼즐을 준비하고 있습니다.</p>
+        <div id="sudoku-board" data-game-board role="group" aria-label="스도쿠 9행 9열 보드" aria-describedby="board-help"></div>
+        <p class="conflict-message" data-conflicts role="status" aria-live="polite"></p>
+        <div class="number-pad" role="group" aria-label="숫자 입력">
+          <button type="button" data-digit="1" aria-label="숫자 1 입력" disabled>1</button>
+          <button type="button" data-digit="2" aria-label="숫자 2 입력" disabled>2</button>
+          <button type="button" data-digit="3" aria-label="숫자 3 입력" disabled>3</button>
+          <button type="button" data-digit="4" aria-label="숫자 4 입력" disabled>4</button>
+          <button type="button" data-digit="5" aria-label="숫자 5 입력" disabled>5</button>
+          <button type="button" data-digit="6" aria-label="숫자 6 입력" disabled>6</button>
+          <button type="button" data-digit="7" aria-label="숫자 7 입력" disabled>7</button>
+          <button type="button" data-digit="8" aria-label="숫자 8 입력" disabled>8</button>
+          <button type="button" data-digit="9" aria-label="숫자 9 입력" disabled>9</button>
+        </div>
+        <div class="input-actions" role="group" aria-label="입력 도구">
+          <button type="button" data-input-action="clear" disabled>지우기</button>
+          <button type="button" data-input-action="notes" aria-pressed="false" disabled>메모</button>
+        </div>
+        <div class="board-legend" aria-label="보드 표시 안내">
+          <span><i class="legend-clue" aria-hidden="true"></i>고정 단서</span>
+          <span><i class="legend-empty" aria-hidden="true"></i>빈칸</span>
+        </div>
+        <dialog data-completion-dialog aria-labelledby="completion-title" aria-describedby="completion-description">
+          <h2 id="completion-title">퍼즐 완성을 축하합니다!</h2>
+          <p id="completion-description">모든 칸을 올바르게 채웠습니다. 경과 시간 <span data-completion-time>00:00</span></p>
+          <button type="button" data-close-dialog autofocus>닫기</button>
+        </dialog>
+      </section>
+      <p class="page-note">하나의 해답을 가진 퍼즐 · 9 × 9</p>
+      <noscript>스도쿠 퍼즐을 보려면 JavaScript를 활성화해 주세요.</noscript>
+    </main>
+  </body>
+</html>
