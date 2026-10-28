@@ -132,3 +132,11 @@ Native dialog 닫기·Escape 후 새 게임 버튼으로 복귀하도록 연결�
 현재 폴더를 독립 저장소로 초기화하고 main에 코드·테스트·문서를 첫 커밋의 전체 스냅샷으로 저장한다. 기능별 커밋을 소급 구성하지 않는다. [Git 저장 기록](docs/git-setup.md)을 따른다.
 원격 저장소 연결·push·실제 PR·병합·배포는 하지 않는다. 001~005와06 인수 검증은 완료됐으며 실제 PR·병합·배포는 별개다.
 06 완료일은2026-10-26이다. 최종 근거·미제공 환경 정보·선택 확인 항목은 [인수 기록](docs/acceptance/sudoku-mvp.md)을 따른다. 사용자 요청으로 변경 문서를 후속 커밋에 저장하며 push는 하지 않는다.
+## 공개 게임 — GitHub Pages
+
+[스도쿠 게임 실행](https://lim-yongkwan.github.io/sudoku-web/)
+
+GitHub Pages를 main 브랜치의 / (root)에 연결했고 [빌드·배포 성공](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40294007460)과 GitHub의 게시 완료 안내를 확인했다.
+배포 기준은7189215다. 기본 도메인의 HTTPS로 제공한다. main에 후속 변경을 push하면 같은 소스에서 다시 배포된다.
+게임은 브라우저에서 실행되며 방문자는 Node.js를 설치하지 않는다.
+도구의 직접 접속은 승인 거부로 중단됐지만, 이후 사용자가 공개 주소의 보드·숫자 입력·새 게임·타이머 정상 동작을 확인해006을 완료했다. 상세 근거와 관찰 한계는 [006 배포 작업](tasks/006-github-pages-deployment.md)을 따른다.

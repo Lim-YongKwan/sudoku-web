@@ -130,3 +130,9 @@ D-001의 오래된 현재 적용 범위·작업 상태 메타데이터를001 문
 
 사용자 요청으로 현재 프로젝트만 독립 Git 저장소로 초기화하고 main에 코드·테스트·문서 전체를 첫 커밋으로 저장한다. 과거 단계별 커밋·브랜치를 소급 생성하지 않는다. [Git 저장 기록](docs/git-setup.md)을 따른다.
 기존 개별 PR 초안은 작성 당시 검증·비교 한계를 담은 제안이며 실제 PR·병합의 증거가 아니다. 이후 사용자 잔여 확인으로06 인수도 완료했다. 최초 보류 이력은 인수 기록에 보존한다.
+## GitHub Pages 공개 배포 — 006
+
+저장소 origin은 https://github.com/Lim-YongKwan/sudoku-web.git 이며, 사용자 push 후 원격 main의 두 커밋과최신7189215를 확인했다.
+GitHub Pages를 main/(root)로 설정해기존 HTML·CSS·Native ESM 게임을 공개했다. 별도런타임서버·번들러·외부패키지는추가하지 않았다.
+공개주소는 [스도쿠 게임](https://lim-yongkwan.github.io/sudoku-web/)이다. [배포40294007460](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40294007460)은 success이며GitHub설정의게시완료·HTTPS를확인했다.
+도구의 직접 플레이/HTTP 검증은 접속 승인 거부로 미실행이었으나, 이후 사용자 보드·입력·새 게임·타이머 정상 보고로 배포 기능 확인을 마쳤다. [006 작업기록](tasks/006-github-pages-deployment.md)에 배포 성공·당시 검증 차단·사용자 확인 후 완료를 구분했다. 기존06인수완료는유지한다.
