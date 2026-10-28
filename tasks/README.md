@@ -1,7 +1,7 @@
 # 스도쿠 작업 목록과 ID 기록
 
-- 현재 단계: 001~006 완료. 006의 GitHub Pages 배포·사용자 동작 확인을 기록했다. 아래 단계별 기록은 당시 이력으로 보존한다.
-- 사용 작업 ID: 001~006. 별도 예약·취소·보관·삭제 ID는 없음. 다음 기본 후보는 007이며 생성 직전 다시 확인한다.
+- 현재 단계: 001~006 완료. 007~013은 사용자 확정 요구사항을 명세한 예정 작업이다. 코드 구현·패키지 설치·새 브랜치·커밋·원격 변경은 이번 명세 작성에서 수행하지 않았다. 아래 과거 단계별 기록은 당시 이력으로 보존한다.
+- 사용 작업 ID: 001~013. 별도 예약·취소·보관·삭제 ID는 없음. 다음 기본 후보는 014이며 생성 직전 다시 확인한다.
 - 결정 ID와 작업 ID는 별개다. 작업 001~005는 결정 번호를 예약하지 않는다. 현재 결정의 다음 후보는 결정 목록에서 별도로 확인한다.
 - 새 폴더로 시작했으며 확인 가능한 프로젝트 내부에 과거 작업 이력은 없다. [설계 계획](../docs/plans/sudoku-mvp.md)의 A~E를 아래 실제 작업 001~005로 연결했다.
 
@@ -15,6 +15,13 @@
 | 004 | [플레이어 입력·상태](004-user-interaction.md) | 완료 | 해당 없음 |
 | 005 | [게임 제어·타이머·완료](005-game-controls-timer.md) | 완료 | 해당 없음 |
 | 006 | [GitHub Pages 배포](006-github-pages-deployment.md) | 완료 | 해당 없음 |
+| 007 | [TypeScript·빌드·검증·배포 전환](007-typescript-migration.md) | 예정 | 해당 없음 |
+| 008 | [부드러운형 숫자 디자인](008-number-typography.md) | 예정 | 해당 없음 |
+| 009 | [숫자 스톡·보조 옵션 기반](009-digit-stock-options.md) | 예정 | 해당 없음 |
+| 010 | [최근 입력 지속 표시](010-last-input-highlight.md) | 예정 | 해당 없음 |
+| 011 | [셀 기준 같은 숫자 강조](011-matching-digit-highlight.md) | 예정 | 해당 없음 |
+| 012 | [숫자 입력·삭제·덮어쓰기 실행 취소](012-numeric-undo.md) | 예정 | 해당 없음 |
+| 013 | [수동 저장·불러오기·이어하기](013-save-and-resume.md) | 예정 | 해당 없음 |
 
 ## 생성과 갱신
 
@@ -39,6 +46,13 @@
 | 004 | feat/task-004-user-interaction | 002, 003 |
 | 005 | feat/task-005-game-controls-timer | 002, 003, 004 |
 | 006 | 기존 main에서 배포 설정 | 001~005·전체 인수 |
+| 007 | feat/task-007-typescript-migration | 006·기존 코드/인수 기록 |
+| 008 | feat/task-008-number-typography | 007 |
+| 009 | feat/task-009-digit-stock-options | 008 |
+| 010 | feat/task-010-last-input-highlight | 009 |
+| 011 | feat/task-011-matching-digit-highlight | 010 |
+| 012 | feat/task-012-numeric-undo | 011 |
+| 013 | feat/task-013-save-and-resume | 012 |
 
 초기 문서·백로그를 팀이 검토해 기본 브랜치에 먼저 반영하고 첫 코드 작업을 시작한다.
 각 작업은 03 구현 → 04 검증·리뷰·완료 판단 → 05 커밋·PR 초안 순서로 진행한다.
@@ -84,3 +98,9 @@
 006은 사용자 후속 요청의 실제 배포 작업ID이며 앞서 실행한 프롬프트 단계06(인수 검증)과 별개다. GitHub Pages 설정·공개 URL 검증은 해당 작업 기록을 따른다.
 
 006의 Pages 설정·빌드/배포는성공했다. [공개게임](https://lim-yongkwan.github.io/sudoku-web/)과 [배포기록](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40294007460)을 확인했다. 도구 직접 검증은 접속 승인 거부로 미실행이었으며, 이후 사용자 정상 동작 보고로006을 완료했다.
+## 007~013 명세 작성 — 2026-10-28
+
+[후속 공통 계약](../docs/plans/sudoku-next-iteration.md)과 [AGENTS TypeScript 수정안](../docs/plans/agents-typescript-proposal.md)을 작성했다.
+설계 결정 D-004~D-006은 채택 방향을 기록했으며 아직 코드에 반영하지 않았다.
+007을 먼저 검증·반영한 후 008~013을 순서대로 진행한다. 현재 실행 명령과 루트 AGENTS는 그대로다.
+앞선 이력의 “다음 후보 006”은 당시 기록이며 현재 발급 기준은 이 문서 상단의 014다.

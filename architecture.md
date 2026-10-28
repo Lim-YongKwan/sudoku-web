@@ -136,3 +136,10 @@ D-001의 오래된 현재 적용 범위·작업 상태 메타데이터를001 문
 GitHub Pages를 main/(root)로 설정해기존 HTML·CSS·Native ESM 게임을 공개했다. 별도런타임서버·번들러·외부패키지는추가하지 않았다.
 공개주소는 [스도쿠 게임](https://lim-yongkwan.github.io/sudoku-web/)이다. [배포40294007460](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40294007460)은 success이며GitHub설정의게시완료·HTTPS를확인했다.
 도구의 직접 플레이/HTTP 검증은 접속 승인 거부로 미실행이었으나, 이후 사용자 보드·입력·새 게임·타이머 정상 보고로 배포 기능 확인을 마쳤다. [006 작업기록](tasks/006-github-pages-deployment.md)에 배포 성공·당시 검증 차단·사용자 확인 후 완료를 구분했다. 기존06인수완료는유지한다.
+## 후속 설계 계획 — 미반영, 2026-10-28
+
+이 문서의 현재 구조는 JavaScript Native ESM 구현을 설명한다.
+[007~013 공통 계획](docs/plans/sudoku-next-iteration.md)에 TypeScript 전환·보조 표시·숫자 실행 취소·수동 저장의 예정 계약을 분리했다.
+[AGENTS 수정안](docs/plans/agents-typescript-proposal.md)과 [설계 결정 목록](docs/decisions/README.md)을 참고한다.
+007~013은 모두 예정 상태다. 타입 원본·출력 폴더·새 상태 필드·저장 기능은 현재 구조에 반영된 것으로 취급하지 않는다.
+각 작업의 실제 구현·검증 후 해당 범위와 현재 실행 방식을 갱신한다.

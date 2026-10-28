@@ -140,3 +140,8 @@ GitHub Pages를 main 브랜치의 / (root)에 연결했고 [빌드·배포 성�
 배포 기준은7189215다. 기본 도메인의 HTTPS로 제공한다. main에 후속 변경을 push하면 같은 소스에서 다시 배포된다.
 게임은 브라우저에서 실행되며 방문자는 Node.js를 설치하지 않는다.
 도구의 직접 접속은 승인 거부로 중단됐지만, 이후 사용자가 공개 주소의 보드·숫자 입력·새 게임·타이머 정상 동작을 확인해006을 완료했다. 상세 근거와 관찰 한계는 [006 배포 작업](tasks/006-github-pages-deployment.md)을 따른다.
+## 다음 개발 계획 — 007~013
+
+[작업 목록](tasks/README.md)에 TypeScript 전환부터 수동 저장까지 일곱 개 예정 태스크를 추가했다.
+[확정 요구사항·공통 계약](docs/plans/sudoku-next-iteration.md), [AGENTS TypeScript 수정안](docs/plans/agents-typescript-proposal.md), [설계 결정](docs/decisions/README.md)을 함께 읽는다.
+이번에는 명세만 작성했다. 현재는 JavaScript 실행 방식이며 TypeScript 설치·빌드 명령·Pages 전환은 007 구현 이후 적용한다.
