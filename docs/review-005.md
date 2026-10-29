@@ -13,7 +13,7 @@
 |---|---|---|---|
 | R1 / P2: 지연 close 이벤트의 중복 처리·포커스 이동 | render가 새 게임·초기화 때문에 dialog.close()를 호출한 뒤 브라우저의 close 이벤트가 나중에 오면, 기존 nativeClose는 현재 상태와 관계없이 CLOSE_COMPLETION_DIALOG와 새 게임 focus를 다시 실행했다. 정상 닫기 후 중복 이벤트도 같은 문제 | 마지막 렌더의 completionDialogOpen을 컨트롤에 보관하고 dismiss에서 열린 상태일 때만 처리. dispatch 전에 플래그를 내려 동기 렌더·지연 close 모두 한 번만 처리한다. 새 dialog가 이미 열려 있으면 기존 open 검사로 이전 이벤트를 무시 | 새 회귀2개 모두 수정 전 실패: 초기화 후 불필요 Action1개, 실제 닫기 후 Action2개. 수정 후 불필요 Action0개·중복 focus0개, 정상 닫기는 Action1개·focus1개 통과 |
 
-수정 파일은 [controls.js](../src/ui/controls.js), 회귀는 [game-controls.test.js](../tests/game-controls.test.js)다.
+수정 파일은 [controls.js](../src/ui/controls.ts), 회귀는 [game-controls.test.js](../tests/game-controls.test.js)다.
 이 증거는 EventTarget 경계 double의 이벤트 순서 검사다. 실제 브라우저의 native close·Escape·focus를 관찰한 것으로 표현하지 않는다.
 
 ## 검토 범위와 판단
@@ -109,3 +109,5 @@ Markdown34개·내부 파일 링크440개 검사, 깨진 링크0개. 005는 차�
 
 Markdown35개·내부 파일 링크473개·깨진 링크0개를 확인했다. 005는 완료·미체크0개이며001~005 완료 목록과 일치한다.
 이번 요청은 문서 갱신과 로컬 초안 작성만 수행했다. 코드 변경·테스트 재실행·Git/원격 쓰기는 없다. 06 인수 검증은 별도 단계로 남겼다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

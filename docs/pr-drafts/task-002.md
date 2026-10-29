@@ -39,10 +39,10 @@
 
 | 파일 | 책임 |
 |---|---|
-| [board.js](../../src/core/board.js) | dense 81셀·정수 0~9 검사, 행/열/박스의 모든 충돌, 빈칸·유효성·원본 단서 완료 판정 |
-| [solver.js](../../src/core/solver.js) | 입력 복사·MRV·비트 마스크 탐색, Promise 풀이·해답 수, 실패·불완전 탐색 구분 |
-| [generator.js](../../src/core/generator.js) | 난수 완성 보드·Fisher–Yates 셀 제거·제거별 유일해 검사·난이도 목표 |
-| [search-runtime.js](../../src/utils/search-runtime.js) | 옵션·난수·단조 시계 검증, 노드 누계·공유 예산·task 양보 |
+| [board.js](../../src/core/board.ts) | dense 81셀·정수 0~9 검사, 행/열/박스의 모든 충돌, 빈칸·유효성·원본 단서 완료 판정 |
+| [solver.js](../../src/core/solver.ts) | 입력 복사·MRV·비트 마스크 탐색, Promise 풀이·해답 수, 실패·불완전 탐색 구분 |
+| [generator.js](../../src/core/generator.ts) | 난수 완성 보드·Fisher–Yates 셀 제거·제거별 유일해 검사·난이도 목표 |
+| [search-runtime.js](../../src/utils/search-runtime.ts) | 옵션·난수·단조 시계 검증, 노드 누계·공유 예산·task 양보 |
 | [boards.js](../../tests/fixtures/boards.js) | 유일해·충돌·복수해·무해답·단서 변경 fixture와 재현 가능한 난수 |
 | [board 검사](../../tests/board.test.js)·[solver 검사](../../tests/solver.test.js)·[generator 검사](../../tests/generator.test.js) | 결과·불변성·제한·취소·seed·독립 기준 풀이 검증 |
 
@@ -107,3 +107,5 @@
 - 002 완료·003~005 예정 상태와 태스크의 초안 링크가 일치한다.
 - 04 테스트 수치·기존 서버 skip·이전 사용자 증거·Git 비교 한계·스크린샷 미첨부를 대조했다.
 - 코드 변경이나 테스트 재실행·실제 Git·원격 쓰기는 수행하지 않았다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGameSession } from '../src/main.js';
-import { generatePuzzle, DIFFICULTY_BLANKS } from '../src/core/generator.js';
-import { solveBoard, countSolutions } from '../src/core/solver.js';
-import { isComplete } from '../src/core/board.js';
+import { createGameSession } from '../.build/src/main.js';
+import { generatePuzzle, DIFFICULTY_BLANKS } from '../.build/src/core/generator.js';
+import { solveBoard, countSolutions } from '../.build/src/core/solver.js';
+import { isComplete } from '../.build/src/core/board.js';
 import { seededRandom } from './fixtures/boards.js';
 
 const search = { now: () => 0, yieldControl: async () => {} };

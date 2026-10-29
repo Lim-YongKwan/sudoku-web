@@ -3,7 +3,7 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../.build');
 const HOST = '127.0.0.1';
 const MIME_TYPES = new Map([
   ['.html', 'text/html; charset=utf-8'],

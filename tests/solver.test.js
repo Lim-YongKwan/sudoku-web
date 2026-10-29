@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { solveBoard, countSolutions } from '../src/core/solver.js';
-import { isComplete, isValidBoard } from '../src/core/board.js';
+import { solveBoard, countSolutions } from '../.build/src/core/solver.js';
+import { isComplete, isValidBoard } from '../.build/src/core/board.js';
 import { uniquePuzzle, uniqueSolution, conflictingPuzzle, multipleSolutions, unsolvablePuzzle, seededRandom } from './fixtures/boards.js';
 
 const fast = { now: () => 0, yieldControl: async () => {} };

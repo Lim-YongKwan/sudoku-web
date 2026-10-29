@@ -5,27 +5,30 @@
 ## 프로젝트
 
 - 목적: 브라우저에서 스도쿠를 즐기는 게임을 순차 개발하며, 여러 개발자와 AI가 문서·Git을 통해 협업하는 예제를 만든다.
-- 기술: Native ESM 기반 ES6+ JavaScript, 시맨틱 HTML, CSS Grid/Flexbox. 외부 npm·CDN 라이브러리와 번들러는 사용하지 않는다.
-- Node.js는 로컬 정적 HTTP 서버와 내장 node:test·node:assert/strict 검증에만 사용한다. 게임 백엔드는 없다.
+- 기술: strict TypeScript 원본을 JavaScript Native ESM으로 컴파일한다. 시맨틱 HTML·CSS Grid/Flexbox를 유지한다. 개발 의존성은 버전을 고정한 TypeScript 컴파일러만 허용하며 런타임 외부 패키지·CDN·번들러·React·Next.js는 도입하지 않는다.
+- Node.js 22 이상은 로컬 정적 HTTP 서버·내장 node:test/assert·타입 검사·빌드에 사용한다. 게임 백엔드는 없다. 007에서는 src만 TS로 옮기고 scripts·테스트·fixture는 JS로 유지한다.
 - 개발 환경 기준: Node.js 22 이상. 기본 PATH의 v16.20.2는 기준 미충족이다. 기존 Node v24.22.1로 검증했으며 새 세션에서 README의 실행 경로를 선택한다. 전역 PATH는 바꾸지 않았다.
 - 현재 경로: tasks/는 작업 원본·목록, docs/decisions/는 결정 원본·목록, docs/review-checklist.md는 코드 리뷰 기준이다.
-- 현재 환경 코드는 index.html·src/main.js·styles/·scripts/·tests/server.test.js다. 002에서 src/core/board.js·solver.js·generator.js, src/utils/search-runtime.js와 엔진 테스트·fixture를 추가했다. 003에서 src/ui/board.js·초기 생성 표시·개발 fixture를 추가했다. 004에서 core/game-state.js·ui/events.js와 store 기반 입력 흐름을 추가했다. 005에서controls·시간 함수·새 게임 효과·완료 dialog를 추가했다. 005의04 리뷰·수정과 사용자 잔여 UI 확인을 마쳤다.
+- 현재 원본은 src/main.ts·src/types.ts·core/ui/utils의 .ts다. scripts와 테스트/fixture는 JS를 유지한다. .build의 컴파일 결과를 서버와 회귀 검사가 사용한다. 001~006 완료 이력과 현재 007 구현 상태는 작업 목록·architecture·docs/typescript-007.md를 따른다.
 - core는 DOM을 참조하지 않는다. 사용자 이벤트 → Action → 상태 갱신 → Render → DOM 흐름이며 렌더러는 상태를 직접 변경하지 않는다.
 - 데이터·함수·이벤트 계약은 [스도쿠 MVP 설계](docs/plans/sudoku-mvp.md)를 기준으로 한다. 설계가 작성됐어도 코드가 구현된 것으로 간주하지 않는다.
-- 생성 코드와 번들 산출물은 현재 없다. 작업·결정 원본은 진행 기록으로 덮어쓰지 않는다.
+- .build/는 개발용 컴파일·정적 출력, dist/는 게임 전용 배포 출력이다. node_modules와 두 출력을 Git에서 제외하고 직접 편집하지 않는다. 작업·결정 원본은 보존한다.
 
 ## 개발 명령어
 
-- 설치: 외부 패키지 설치 불필요. package.json에 dependencies·devDependencies가 없다. Node 22 이상 실행 경로를 먼저 준비한다.
-- 실행: npm start → runtime 검사 → node scripts/serve.mjs. Windows는 npm.cmd 또는 README의 명시적 Node·npm CLI 호출을 사용한다.
-- 정적 검사·타입 검사: 별도 린터·TypeScript 검사 미도입. 외부 검사 도구를 임의로 추가하지 않는다.
-- 테스트: npm test → runtime 검사 → node --test. tests/server.test.js가 실제 HTTP를 검증한다. skipped 항목을 통과로 보고하지 않는다.
-- 빌드: 해당 없음. 브라우저 Native ESM으로 실행하며 번들러를 사용하지 않는다.
-- 필수 검증: 문서 변경은 파일 링크·ID·상태·현재 구조와의 일치 확인. 코드 변경은 관련 자동 테스트와 전 회귀 테스트를 실행한다.
-- UI 변경은 HTTP 브라우저에서 키보드·터치·포커스·좁은 화면·콘솔 오류를 해당 범위에 맞게 확인한다. 자동 DOM 테스트 도구가 없으면 실제 브라우저 확인으로 기록하며 미실행은 통과가 아니다.
-- 환경 준비: Node.js 22 이상과 지원 브라우저. npm·서버·자동 검증을 수행했고 잔여 브라우저·서버 종료 확인은 사용자 보고로 기록했다. 서버는 로컬 HTTP로 제공하며 file:// 더블클릭 실행은 지원하지 않는다.
-- 명령어는 실제 설정에서 확인한다. 비밀값은 문서와 출력에 남기지 않는다.
-
+- 007 구현 진행 중: 아래 명령·타입/출력 규칙을 구현하고 로컬 검증했다. 실제 결과는 tasks/007-typescript-migration.md와 docs/typescript-007.md에 기록한다. 아직 실행하지 않은 검증은 통과로 표시하지 않는다.
+- 설치: npm ci. 고정 TypeScript 개발 의존성과 package-lock.json을 사용한다. 전역 설치·PATH 영구 변경을 요구하지 않는다.
+- 타입 검사: npm run typecheck (tsc --noEmit). strict·noEmitOnError를 유지한다.
+- 개발 빌드: npm run build:dev. 깨끗한 .build에 컴파일된 src와 HTML/CSS·개발 fixture를 준비한다.
+- 테스트: npm test. 최신 개발 출력을 만든 후 node --test로 검증한다. 기존 92개 검증 범위를 보존하고 skip을 통과로 표시하지 않는다.
+- 실행: npm start. 최신 개발 출력 준비 후 로컬 HTTP로 제공한다. Windows는 npm.cmd 또는 README의 명시적 Node/npm 경로를 사용한다. file:// 직접 실행은 지원하지 않는다.
+- 배포 빌드: npm run build. 깨끗한 dist에 index.html·styles·컴파일된 src만 준비한다. docs/tests/scripts/package/config/소스맵을 공개 출력에 넣지 않는다.
+- npm 명령을 순환 호출하거나 동시에 같은 출력을 정리하지 않는다. 정리 대상은 저장소 내부의 고정된 출력 폴더로 제한한다.
+- 필수 검증: 문서는 링크·ID·현재/예정 구분을 확인한다. 코드는 타입 검사·깨끗한 빌드·전 회귀를 실행한다. UI는 HTTP·키보드/터치·포커스·320px/1280px·콘솔을 확인한다.
+- 타입 선언은 런타임 검증을 대체하지 않는다. 보드·Action·생성 결과·주입 함수·구독을 타입으로 정의하고 외부 JSON은 unknown으로 검증한다. 오류를 숨기는 any·근거 없는 as·ts-ignore·strict 해제를 하지 않는다.
+- 상대 import는 출력 .js 주소를 유지하며 TS·브라우저 Native ESM·Node 검사에서 모두 해석돼야 한다. DOM null/이벤트 대상도 검증한다.
+- Pages 전환은 검증된 dist를 GitHub Actions로 배포한다. 현재 공개 사이트는 main/(root)이며 원격 전환·실제 배포는 커밋/push 승인 후 확인한다. 미배포 상태에서 D-001을 전체 대체됨으로 바꾸지 않는다.
+- 비밀값은 문서와 출력에 남기지 않는다.
 ## 작업 시작
 
 - architecture.md에서 현재 구조를 읽고, 지정된 작업과 관련 결정·기존 작업을 찾아 읽는다. 전체 이력을 매번 읽지 않는다.

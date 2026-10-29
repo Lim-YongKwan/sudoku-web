@@ -11,10 +11,10 @@
 
 | 파일 | 동작 |
 |---|---|
-| [game-state.js](../src/core/game-state.js) | createInitialState·reduceGame·createGameStore, 전체 계획 Action, 순수 전이·구독 정리 |
-| [events.js](../src/ui/events.js) | bindInput·키 정책, 위임 click·keydown, 보드 선택·숫자·삭제·메모·포커스 |
-| [main.js](../src/main.js) | mountGame으로 store·생성 Action·renderer·입력·완료 판정·오류 안내·정리 연결 |
-| [board.js](../src/ui/board.js) | 기존 renderer를 그대로 재사용해 선택·값·메모·충돌·Tab 위치 갱신 |
+| [game-state.js](../src/core/game-state.ts) | createInitialState·reduceGame·createGameStore, 전체 계획 Action, 순수 전이·구독 정리 |
+| [events.js](../src/ui/events.ts) | bindInput·키 정책, 위임 click·keydown, 보드 선택·숫자·삭제·메모·포커스 |
+| [main.js](../src/main.ts) | mountGame으로 store·생성 Action·renderer·입력·완료 판정·오류 안내·정리 연결 |
+| [board.js](../src/ui/board.ts) | 기존 renderer를 그대로 재사용해 선택·값·메모·충돌·Tab 위치 갱신 |
 | [index.html](../index.html)·[main.css](../styles/main.css) | 화면 숫자 패드·삭제·메모·중복 안내·활성/비활성·pressed 표시 |
 | [game-state.test.js](../tests/game-state.test.js) | 상태·Action·불변·단서·메모·이동·완료·구독·재진입 검사 13개 |
 | [input-events.test.js](../tests/input-events.test.js) | 게임 키 매핑과 외부 폼·수정키·IME·Tab 보존 정책 검사 2개 |
@@ -102,3 +102,5 @@ Node 정책·상태 검사와 HTTP 자산 제공은 실제 click·touch·DOM 포
 상태/키/이벤트 경계18개가 통과했고 최신 전체는71개 중70통과·0실패·1skip이다.
 브라우저 호출은 장시간 지연 후 연결 거부로 끝나 실제 click·touch·DOM 검증은 미실행이다. 이번 임시 서버의 종료 로그·exit0은 확인했다.
 004는 차단됨이며 상세 재현·수정·검증·해제 절차는 [04 리뷰 기록](review-004.md)을 따른다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

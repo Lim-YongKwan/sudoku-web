@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getElapsedSeconds, formatElapsed } from '../src/utils/time.js';
+import { getElapsedSeconds, formatElapsed } from '../.build/src/utils/time.js';
 
 test('elapsed time floors milliseconds, resets before start and clamps negative differences', () => {
   assert.equal(getElapsedSeconds({ startedAtMs: null, stoppedAtMs: null }, 50000), 0);

@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "prestart": "node scripts/check-runtime.mjs",
+    "typecheck": "node scripts/check-runtime.mjs && node node_modules/typescript/bin/tsc --noEmit",
+    "build:dev": "node scripts/build.mjs development",
+    "build": "node scripts/build.mjs production",
+    "prestart": "node scripts/build.mjs development",
     "start": "node scripts/serve.mjs",
-    "pretest": "node scripts/check-runtime.mjs",
-    "test": "node --test"
+    "pretest": "node scripts/build.mjs development",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
   }
 }

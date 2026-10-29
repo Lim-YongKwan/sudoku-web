@@ -1,3 +1,12 @@
+import type { Action, Board, GameState, Generate, Clock } from './types.js';
+export interface SessionOptions {
+  initialState?: GameState; generate?: Generate; now?: Clock;
+  schedule?: (callback: () => void, delay: number) => number; cancel?: (id: number) => void;
+  onState?: (state: GameState, seconds: number) => void; onElapsed?: (seconds: number) => void; reportError?: (error: unknown) => void;
+}
+export interface MountOptions extends SessionOptions {
+  root: HTMLElement; scope: HTMLElement; statusElement: HTMLElement; signal?: AbortSignal; visibilityTarget?: Document;
+}
 import { createGameStore } from './core/game-state.js';
 import { bindInput } from './ui/events.js';
 import { bindControls } from './ui/controls.js';
@@ -7,13 +16,13 @@ import { assertBoard, isValidBoard, isComplete, findConflicts } from './core/boa
 import { renderBoard } from './ui/board.js';
 
 /** Display-only snapshot using the planned GameState fields; no store yet. */
-export function createDisplayState(puzzle = null) {
+export function createDisplayState(puzzle: Board | null = null): GameState {
   if (puzzle !== null) assertBoard(puzzle);
   return {
     status: puzzle === null ? 'generating' : 'playing',
     puzzle: puzzle === null ? null : puzzle.slice(),
     values: puzzle === null ? null : puzzle.slice(),
-    notes: Array.from({ length: 81 }, () => new Set()),
+    notes: Array.from({ length: 81 }, () => new Set<number>()),
     selectedIndex: puzzle === null || !puzzle.includes(0) ? null : puzzle.findIndex((digit) => digit === 0),
     noteMode: false, selectedDifficulty: 'easy', activeDifficulty: 'easy',
     requestId: 1, timer: { startedAtMs: null, stoppedAtMs: null },
@@ -21,7 +30,7 @@ export function createDisplayState(puzzle = null) {
   };
 }
 
-export async function showInitialBoard({ root, statusElement, generate = generatePuzzle, signal }) {
+export async function showInitialBoard({ root, statusElement, generate = generatePuzzle, signal }: { root: HTMLElement; statusElement: HTMLElement; generate?: Generate; signal?: AbortSignal }) {
   const loading = createDisplayState();
   renderBoard(root, loading);
   statusElement.dataset.state = 'loading';
@@ -53,15 +62,15 @@ export async function showInitialBoard({ root, statusElement, generate = generat
 }
 
 /** Own only this initialization's signal; restart after an aborted BFCache return. */
-export function bindInitialBoardLifecycle(target, start) {
-  let controller;
+export function bindInitialBoardLifecycle(target: EventTarget, start: (signal: AbortSignal) => Promise<void>): () => void {
+  let controller: AbortController;
   const begin = () => {
     controller = new AbortController();
     void start(controller.signal);
   };
   const onHide = () => controller.abort();
-  const onShow = (event) => {
-    if (event.persisted && controller.signal.aborted) begin();
+  const onShow = (event: Event) => {
+    if ('persisted' in event && event.persisted && controller.signal.aborted) begin();
   };
   target.addEventListener('pagehide', onHide);
   target.addEventListener('pageshow', onShow);
@@ -78,24 +87,26 @@ export function createGameSession({
   initialState, generate = generatePuzzle, now = () => performance.now(),
   schedule = (fn, delay) => setInterval(fn, delay), cancel = (id) => clearInterval(id),
   onState = () => {}, onElapsed = () => {}, reportError = (error) => console.error('퍼즐 생성 실패:', error),
-} = {}) {
+}: SessionOptions = {}) {
   const store = createGameStore(initialState);
-  let disposed = false, controller, tick = null;
+  let disposed = false;
+  let controller: AbortController | undefined;
+  let tick: number | null = null;
   const elapsed = () => getElapsedSeconds(store.getState().timer, now());
   const stopTick = () => { if (tick !== null) { cancel(tick); tick = null; } };
   const refreshTime = () => { if (!disposed) onElapsed(elapsed()); };
-  const refresh = (state) => {
+  const refresh = (state: GameState) => {
     if (state.status !== 'playing') stopTick();
     else if (tick === null) tick = schedule(refreshTime, 250);
     onState(state, elapsed());
   };
   const unsubscribe = store.subscribe(refresh);
-  const dispatch = (action) => {
+  const dispatch = (action: Action) => {
     if (disposed) return store.getState();
     store.dispatch(action);
     const state = store.getState();
     if ((action.type === 'ENTER_DIGIT' || action.type === 'CLEAR_CELL') && state.status === 'playing'
-      && isComplete(state.values, state.puzzle)) {
+      && state.values && state.puzzle && isComplete(state.values, state.puzzle)) {
       store.dispatch({ type: 'GAME_COMPLETED', nowMs: now() });
     }
     return store.getState();
@@ -149,8 +160,9 @@ export function createGameSession({
 
 /** Connect the session to the persistent board, controls and native completion dialog. */
 export function mountGame({ root, scope, statusElement, initialState, generate = generatePuzzle,
-  now = () => performance.now(), signal, schedule, cancel, visibilityTarget = globalThis.document }) {
-  let controls, previousStatus = null;
+  now = () => performance.now(), signal, schedule, cancel, visibilityTarget = globalThis.document }: MountOptions) {
+  let controls: ReturnType<typeof bindControls> | undefined;
+  let previousStatus: GameState['status'] | null = null;
   const session = createGameSession({
     initialState, generate, now, schedule, cancel,
     onElapsed: (seconds) => controls?.renderElapsed(seconds),
@@ -160,7 +172,7 @@ export function mountGame({ root, scope, statusElement, initialState, generate =
       const conflictMessage = scope.querySelector('[data-conflicts]');
       if (conflictMessage) conflictMessage.textContent = conflicts.size
         ? '중복된 숫자가 있는 ' + conflicts.size + '개 칸을 확인해 주세요. 느낌표로 표시했습니다.' : '';
-      for (const control of scope.querySelectorAll('[data-digit], [data-input-action]')) {
+      for (const control of scope.querySelectorAll<HTMLButtonElement>('[data-digit], [data-input-action]')) {
         control.disabled = state.status !== 'playing';
         if (control.dataset.inputAction === 'notes') control.setAttribute('aria-pressed', String(state.noteMode));
       }
@@ -177,12 +189,12 @@ export function mountGame({ root, scope, statusElement, initialState, generate =
         statusElement.focus({ preventScroll: true });
       }
       previousStatus = state.status;
-      controls.render(state, seconds);
+      controls?.render(state, seconds);
     },
   });
   controls = bindControls(scope, session.dispatch, session.newGame);
   const unbind = bindInput(scope, session.dispatch);
-  const onVisibility = () => { if (!visibilityTarget.hidden) session.refreshTime(); };
+  const onVisibility = () => { if (!visibilityTarget?.hidden) session.refreshTime(); };
   visibilityTarget?.addEventListener('visibilitychange', onVisibility);
   let disposed = false;
   function dispose() {
@@ -190,7 +202,7 @@ export function mountGame({ root, scope, statusElement, initialState, generate =
     disposed = true;
     session.dispose();
     unbind();
-    controls.dispose();
+    controls?.dispose();
     visibilityTarget?.removeEventListener('visibilitychange', onVisibility);
     signal?.removeEventListener('abort', dispose);
   }
@@ -200,19 +212,21 @@ export function mountGame({ root, scope, statusElement, initialState, generate =
   return { ...session, ready, dispose };
 }
 if (typeof document !== 'undefined') {
-  const root = document.querySelector('[data-game-board]');
+  const root = document.querySelector<HTMLElement>('[data-game-board]');
   if (root) {
-    const statusElement = document.querySelector('#module-status');
+    const statusElement = document.querySelector<HTMLElement>('#module-status');
     if (!statusElement) throw new Error('상태 안내 영역이 필요합니다.');
-    let game, cachedState;
-    const scope = document.querySelector('[data-game-input]');
+    let game: ReturnType<typeof mountGame> | undefined;
+    let cachedState: GameState | undefined;
+    const scope = document.querySelector<HTMLElement>('[data-game-input]');
+    if (!scope) throw new Error('입력 영역이 필요합니다.');
     window.addEventListener('pagehide', () => {
       cachedState = game?.store.getState();
       game?.dispose();
     });
     bindInitialBoardLifecycle(window, (signal) => {
       game?.dispose();
-      const initialState = ['playing', 'completed'].includes(cachedState?.status) ? cachedState : undefined;
+      const initialState = cachedState && ['playing', 'completed'].includes(cachedState.status) ? cachedState : undefined;
       game = mountGame({ root, scope, statusElement, initialState, signal });
       return game.ready;
     });

@@ -1,9 +1,11 @@
+import type { GameState } from '../types.js';
+interface RenderedCell { button: HTMLButtonElement; digit: HTMLSpanElement; markers: HTMLSpanElement[]; error: HTMLSpanElement }
 import { assertBoard, findConflicts } from '../core/board.js';
 
-const renderedBoards = new WeakMap();
+const renderedBoards = new WeakMap<HTMLElement, RenderedCell[]>();
 
 /** Read-only projection shared by DOM rendering and Node contract tests. */
-export function getCellModels(state) {
+export function getCellModels(state: GameState) {
   if (!state || typeof state !== 'object') throw new TypeError('Display state is required.');
   const { puzzle, values, notes, selectedIndex, status } = state;
   if (puzzle !== null) assertBoard(puzzle);
@@ -48,7 +50,7 @@ export function getCellModels(state) {
 }
 
 /** Update persistent cells only. Never move focus or modify caller-owned state. */
-export function renderBoard(root, state) {
+export function renderBoard(root: HTMLElement, state: GameState): void {
   if (!root || typeof root.append !== 'function' || !root.ownerDocument) throw new TypeError('A board root element is required.');
   const models = getCellModels(state);
   let cells = renderedBoards.get(root);

@@ -1,19 +1,20 @@
+import type { Clock, SearchOptions, SharedBudget, StopReason, YieldControl } from '../types.js';
 /** Browser-safe cooperative search support; no Node or DOM imports. */
-export const defaultYield = () => new Promise((resolve) => setTimeout(resolve, 0));
+export const defaultYield: YieldControl = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
-export function positive(value, name, integer = false) {
+export function positive(value: number, name: string, integer = false): number {
   if (!Number.isFinite(value) || value <= 0 || (integer && !Number.isSafeInteger(value))) {
     throw new RangeError(name + ' must be a positive ' + (integer ? 'safe integer.' : 'finite number.'));
   }
   return value;
 }
 
-export function optionObject(options) {
+export function optionObject(options: unknown): void {
   if (options === null || typeof options !== 'object' || Array.isArray(options)) throw new RangeError('Options must be an object.');
   if (Object.hasOwn(options, 'sharedBudget')) throw new RangeError('sharedBudget is internal.');
 }
 
-export function hooks(options) {
+export function hooks(options: SearchOptions) {
   const now = options.now === undefined ? (() => performance.now()) : options.now;
   const yieldControl = options.yieldControl === undefined ? defaultYield : options.yieldControl;
   const rng = options.rng;
@@ -26,7 +27,7 @@ export function hooks(options) {
   return { now, yieldControl, rng, signal };
 }
 
-export function monotonicClock(now) {
+export function monotonicClock(now: Clock): Clock {
   let previous = -Infinity;
   return () => {
     const value = now();
@@ -36,7 +37,7 @@ export function monotonicClock(now) {
   };
 }
 
-export function shuffled(values, rng) {
+export function shuffled<T>(values: readonly T[], rng?: () => number): T[] {
   const result = values.slice();
   if (!rng) return result;
   for (let i = result.length - 1; i > 0; i--) {
@@ -48,14 +49,14 @@ export function shuffled(values, rng) {
   return result;
 }
 
-export async function yieldTask(yieldControl) {
+export async function yieldTask(yieldControl: YieldControl): Promise<void> {
   const pending = yieldControl();
   if (!pending || typeof pending.then !== 'function') throw new RangeError('yieldControl must return a Promise.');
   await pending;
 }
 
 /** shared is only passed internally by the generator, never via public options. */
-export function searchRuntime(options, shared) {
+export function searchRuntime(options: SearchOptions, shared?: SharedBudget) {
   optionObject(options);
   const injected = hooks(options);
   const maxNodes = positive((options.maxNodes === undefined ? 100000 : options.maxNodes), 'maxNodes', true);
@@ -66,7 +67,7 @@ export function searchRuntime(options, shared) {
   let nodes = 0;
   let elapsedMs = 0;
 
-  function check(entering = false) {
+  function check(entering = false): StopReason | null {
     const time = now();
     elapsedMs = time - startedAt;
     if (injected.signal?.aborted) return 'aborted';

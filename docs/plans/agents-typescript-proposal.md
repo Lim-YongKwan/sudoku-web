@@ -1,9 +1,9 @@
-# AGENTS.md TypeScript 전환 수정안 — 007 적용 대기
+# AGENTS.md TypeScript 전환 수정안 — 007 로컬 적용
 
 - 작성일: 2026-10-28
-- 상태: 수정안. 이번에는 루트 AGENTS.md에 적용하지 않았다.
+- 상태: 2026-10-28~29 007 구현 요청으로 로컬 AGENTS에 적용했다. 실제 검증과 남은 공개 배포는 [007 기록](../typescript-007.md)을 따른다. 아래는 당시 수정안이며 적용 순서의 이력을 보존한다.
 - 관련: [007](../../tasks/007-typescript-migration.md), [D-004](../decisions/004-typescript-toolchain.md), [후속 공통 계약](sudoku-next-iteration.md).
-- 현재 프로젝트는 JavaScript Native ESM이며 빌드 없이 실행한다. 아래 폴더와 명령은 007에서 구현할 예정 계약이다.
+- 수정안 작성 당시에는 빌드 없는 JavaScript였다. 현재 브랜치는 TS·타입/로컬 빌드를 구현했고 원격 Pages 전환은 미실행이다.
 
 ## 적용 순서
 

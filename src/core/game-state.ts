@@ -1,10 +1,11 @@
+import type { Action, GameState, GameStore, Listener } from '../types.js';
 import { assertBoard, isValidBoard, isComplete } from './board.js';
 import { DIFFICULTY_BLANKS } from './generator.js';
 
-const emptyNotes = () => Array.from({ length: 81 }, () => new Set());
+const emptyNotes = () => Array.from({ length: 81 }, () => new Set<number>());
 const emptyTimer = () => ({ startedAtMs: null, stoppedAtMs: null });
 
-export function createInitialState() {
+export function createInitialState(): GameState {
   return {
     status: 'idle', puzzle: null, values: null, notes: emptyNotes(),
     selectedIndex: null, noteMode: false, selectedDifficulty: 'easy',
@@ -13,19 +14,19 @@ export function createInitialState() {
   };
 }
 
-function integer(value, name, max) {
+function integer(value: number, name: string, max: number): void {
   if (typeof value !== 'number') throw new TypeError(name + ' must be a number.');
   if (!Number.isSafeInteger(value) || value < 0 || value > max) throw new RangeError(name + ' out of range.');
 }
-function difficulty(value) {
+function difficulty(value: string): void {
   if (typeof value !== 'string') throw new TypeError('difficulty must be a string.');
   if (!Object.hasOwn(DIFFICULTY_BLANKS, value)) throw new RangeError('Unknown difficulty.');
 }
-function time(value) {
+function time(value: number): void {
   if (typeof value !== 'number') throw new TypeError('nowMs must be a number.');
   if (!Number.isFinite(value) || value < 0) throw new RangeError('nowMs must be finite and nonnegative.');
 }
-function validateAction(action) {
+function validateAction(action: Action): void {
   if (!action || typeof action.type !== 'string') throw new TypeError('Action type is required.');
   switch (action.type) {
     case 'SET_DIFFICULTY': difficulty(action.difficulty); break;
@@ -52,11 +53,11 @@ function validateAction(action) {
       break;
     case 'GAME_COMPLETED': time(action.nowMs); break;
     case 'CLEAR_CELL': case 'TOGGLE_NOTE_MODE': case 'CLOSE_COMPLETION_DIALOG': break;
-    default: throw new TypeError('Unknown action type: ' + action.type);
+    default: throw new TypeError('Unknown action type.');
   }
 }
 
-export function reduceGame(state, action) {
+export function reduceGame(state: GameState, action: Action): GameState {
   validateAction(action);
   switch (action.type) {
     case 'SET_DIFFICULTY':
@@ -81,13 +82,14 @@ export function reduceGame(state, action) {
         error: { code: action.code, message: action.message },
       };
     case 'GAME_COMPLETED':
-      if (state.status !== 'playing' || !isComplete(state.values, state.puzzle)) return state;
-      if (action.nowMs < state.timer.startedAtMs) throw new RangeError('Completion time cannot precede start.');
+      if (state.status !== 'playing' || !state.values || !state.puzzle || !isComplete(state.values, state.puzzle)) return state;
+      if (state.timer.startedAtMs === null || action.nowMs < state.timer.startedAtMs) throw new RangeError('Completion time cannot precede start.');
       return { ...state, status: 'completed', timer: { ...state.timer, stoppedAtMs: action.nowMs }, completionDialogOpen: true };
     case 'CLOSE_COMPLETION_DIALOG':
       return state.status === 'completed' && state.completionDialogOpen ? { ...state, completionDialogOpen: false } : state;
   }
   if (state.status !== 'playing') return state;
+  if (!state.puzzle || !state.values) throw new TypeError('Playing state requires puzzle and values.');
   if (action.type === 'SELECT_CELL') return state.selectedIndex === action.index ? state : { ...state, selectedIndex: action.index };
   if (action.type === 'MOVE_SELECTION') {
     if (state.selectedIndex === null) return { ...state, selectedIndex: state.puzzle.indexOf(0) };
@@ -104,20 +106,22 @@ export function reduceGame(state, action) {
   const notes = state.notes.slice();
   if (action.type === 'ENTER_DIGIT' && state.noteMode) {
     if (state.values[index] !== 0) return state;
-    notes[index] = new Set(notes[index]);
-    if (notes[index].has(action.digit)) notes[index].delete(action.digit);
-    else notes[index].add(action.digit);
+    const cellNotes = new Set(notes[index]);
+    if (cellNotes.has(action.digit)) cellNotes.delete(action.digit);
+    else cellNotes.add(action.digit);
+    notes[index] = cellNotes;
     return { ...state, notes };
   }
+  if (action.type !== 'CLEAR_CELL' && action.type !== 'ENTER_DIGIT') return state;
   const digit = action.type === 'CLEAR_CELL' ? 0 : action.digit;
   if (state.values[index] === digit && state.notes[index].size === 0) return state;
   const values = state.values.slice();
-  values[index] = digit; notes[index] = new Set();
+  values[index] = digit; notes[index] = new Set<number>();
   return { ...state, values, notes };
 }
 
 /** getState returns a read-only view by contract; subscribers must never mutate it. */
-export function createGameStore(initialState = createInitialState()) {
+export function createGameStore(initialState: GameState = createInitialState()): GameStore {
   if (!initialState || !Array.isArray(initialState.notes) || initialState.notes.length !== 81) throw new TypeError('Invalid initial state.');
   for (let index = 0; index < 81; index++) {
     const notes = initialState.notes[index];
@@ -128,15 +132,15 @@ export function createGameStore(initialState = createInitialState()) {
   }
   if (initialState.puzzle !== null) assertBoard(initialState.puzzle);
   if (initialState.values !== null) assertBoard(initialState.values);
-  let state = {
+  let state: GameState = {
     ...initialState, puzzle: initialState.puzzle?.slice() ?? null, values: initialState.values?.slice() ?? null,
     notes: initialState.notes.map((notes) => new Set(notes)), timer: { ...initialState.timer },
     error: initialState.error ? { ...initialState.error } : null,
   };
-  const listeners = new Map();
-  const pending = [];
+  const listeners = new Map<object, Listener>();
+  const pending: Action[] = [];
   let dispatching = false;
-  const store = {
+  const store: GameStore = {
     getState: () => state,
     dispatch(action) {
       // Queue subscriber dispatches so every observer sees each transition in order.
@@ -145,7 +149,9 @@ export function createGameStore(initialState = createInitialState()) {
       dispatching = true;
       try {
         while (pending.length) {
-          const next = reduceGame(state, pending.shift());
+          const action = pending.shift();
+          if (action === undefined) throw new TypeError('Action type is required.');
+          const next = reduceGame(state, action);
           if (next === state) continue;
           state = next;
           for (const [token, listener] of [...listeners]) if (listeners.has(token)) listener(state);

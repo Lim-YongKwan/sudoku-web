@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGameSession } from '../src/main.js';
-import { createInitialState } from '../src/core/game-state.js';
-import { bindControls } from '../src/ui/controls.js';
+import { createGameSession } from '../.build/src/main.js';
+import { createInitialState } from '../.build/src/core/game-state.js';
+import { bindControls } from '../.build/src/ui/controls.js';
 import { uniqueSolution } from './fixtures/boards.js';
 
 const blanks = { easy:35, normal:45, hard:50 };

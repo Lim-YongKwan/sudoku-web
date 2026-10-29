@@ -40,8 +40,8 @@
 | 파일 | 변경 |
 |---|---|
 | [index.html](../../index.html)·[main.css](../../styles/main.css) | 시맨틱 보드 영역·보기 전용 안내·상태·범례, Grid·3×3 경계·단서·포커스·반응형 |
-| [src/ui/board.js](../../src/ui/board.js) | 읽기 전용 표시 모델, WeakMap으로 81셀·내부 span 재사용, 셀 의미·선택·메모·충돌 표시 |
-| [src/main.js](../../src/main.js) | easy 생성 성공 검증·표시 상태·로딩/실패·pagehide 취소·캐시 복귀 재초기화 |
+| [src/ui/board.js](../../src/ui/board.ts) | 읽기 전용 표시 모델, WeakMap으로 81셀·내부 span 재사용, 셀 의미·선택·메모·충돌 표시 |
+| [src/main.js](../../src/main.ts) | easy 생성 성공 검증·표시 상태·로딩/실패·pagehide 취소·캐시 복귀 재초기화 |
 | [board.html](../../tests/browser/board.html)·[board-checks.js](../../tests/browser/board-checks.js) | 앱과 분리된 고정 fixture, DOM/포커스/불변 검사, 실패 주입·복원 |
 | [board-assertions.js](../../tests/browser/board-assertions.js) | DOM 측정값을 명시적 boolean 합격 조건으로 변환 |
 | [board-rendering.test.js](../../tests/board-rendering.test.js)·[server.test.js](../../tests/server.test.js) | 표시·수명주기·판정 회귀와 새 보드 자산 HTTP/MIME 검사 |
@@ -96,3 +96,5 @@
 ## 실제 반영 전
 
 Git 저장소·기본 브랜치를 준비한 뒤 실제 diff·스테이징 파일·선행 코드 반영 상태와 이 초안을 대조한다. 이 파일은 PR 생성·병합의 증거가 아니다. 승인된 범위에서 실제 커밋·푸시·PR·리뷰·병합을 수행한 뒤 다음 작업으로 진행한다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

@@ -40,9 +40,9 @@
 
 | 파일 | 변경 |
 |---|---|
-| [main.js](../../src/main.js) | createGameSession으로 생성/상태/시계/scheduler 효과 조정, mountGame의 입력·컨트롤·visibility·정리 연결 |
-| [controls.js](../../src/ui/controls.js) | 난이도·새 게임·시간·native dialog 렌더와 이벤트 소유·정리·포커스 복귀 |
-| [time.js](../../src/utils/time.js) | 시각 차이를 초로 내림, 완료 시간 고정,100분 이상 mm:ss 표시 |
+| [main.js](../../src/main.ts) | createGameSession으로 생성/상태/시계/scheduler 효과 조정, mountGame의 입력·컨트롤·visibility·정리 연결 |
+| [controls.js](../../src/ui/controls.ts) | 난이도·새 게임·시간·native dialog 렌더와 이벤트 소유·정리·포커스 복귀 |
+| [time.js](../../src/utils/time.ts) | 시각 차이를 초로 내림, 완료 시간 고정,100분 이상 mm:ss 표시 |
 | [index.html](../../index.html)·[main.css](../../styles/main.css) | 난이도·새 게임·현재 난이도·경과 시간·접근성 제목/설명의 완료 dialog·반응형 배치 |
 | [시간 검사](../../tests/time.test.js)·[제어 검사](../../tests/game-controls.test.js) | 시간 경계·경합·재시도·단일 interval·완료 잠금·정리·지연 close 회귀 |
 | [HTTP 검사](../../tests/server.test.js) | 신규 JS/개발 페이지의 HTTP·MIME 검사 |
@@ -94,3 +94,5 @@ D-002·D-003을 구현에 적용했고 결정 상태는 채택됨을 유지한�
 
 저장소·기본 브랜치 준비 후 실제 diff·스테이징 파일·선행 코드 반영 상태와 이 초안을 대조한다.
 이 파일은 실제 PR 생성·리뷰 승인·병합의 증거가 아니다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

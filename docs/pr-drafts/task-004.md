@@ -29,9 +29,9 @@
 
 ### 변경 범위
 
-- [game-state.js](../../src/core/game-state.js): 순수 reducer·store·불변 복사·독립 Set·구독 정리·재진입 큐·완료 메타데이터.
-- [events.js](../../src/ui/events.js): 위임 click·keydown·외부 폼 보존·선택/포커스 연결·중복 바인딩 방지.
-- [main.js](../../src/main.js), [HTML](../../index.html), [CSS](../../styles/main.css): 생성·store·렌더·입력 도구·충돌·완료 잠금·정리 연결.
+- [game-state.js](../../src/core/game-state.ts): 순수 reducer·store·불변 복사·독립 Set·구독 정리·재진입 큐·완료 메타데이터.
+- [events.js](../../src/ui/events.ts): 위임 click·keydown·외부 폼 보존·선택/포커스 연결·중복 바인딩 방지.
+- [main.js](../../src/main.ts), [HTML](../../index.html), [CSS](../../styles/main.css): 생성·store·렌더·입력 도구·충돌·완료 잠금·정리 연결.
 - [상태 검사](../../tests/game-state.test.js)·[이벤트 검사](../../tests/input-events.test.js)·[HTTP 검사](../../tests/server.test.js), [개발 fixture](../../tests/browser/interaction.html) 추가·확장.
 - 외부 의존성 없음. 새 게임·난이도 UI·시간 표시·완료 dialog는005 범위.
 
@@ -67,3 +67,5 @@ D-003 상태·입력·완료 메타데이터를 적용했으며005 시간·게�
 ### 관련 문서
 
 [004 태스크](../../tasks/004-user-interaction.md)·[작업 목록](../../tasks/README.md)·[아키텍처](../../architecture.md)·[계약](../plans/sudoku-mvp.md)·[D-003](../decisions/003-state-input-and-time.md)·[03 기록](../input-004.md)·[04 리뷰](../review-004.md)·[005](../../tasks/005-game-controls-timer.md).
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

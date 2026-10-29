@@ -13,8 +13,8 @@
 |---|---|
 | [index.html](../index.html) | 시맨틱 보드 마운트·상태 안내·보기 전용 안내·범례 |
 | [main.css](../styles/main.css) | 9열 Grid·정사각 셀·3x3 굵은 경계·단서/빈칸·가시적 포커스·좁은 화면 스타일 |
-| [board.js](../src/ui/board.js) | renderBoard(root,state), 상태의 읽기 전용 셀 표시 모델, WeakMap으로 81셀 노드 재사용 |
-| [main.js](../src/main.js) | generatePuzzle(easy) 초기 호출·성공 검증·초기 표시·로딩·실패 안내·pagehide 취소 |
+| [board.js](../src/ui/board.ts) | renderBoard(root,state), 상태의 읽기 전용 셀 표시 모델, WeakMap으로 81셀 노드 재사용 |
+| [main.js](../src/main.ts) | generatePuzzle(easy) 초기 호출·성공 검증·초기 표시·로딩·실패 안내·pagehide 취소 |
 | [board.html](../tests/browser/board.html) | 개발 전용 고정 fixture 화면·실패 결과 주입·포커스/노드/불변/레이아웃 검사 |
 | [board-checks.js](../tests/browser/board-checks.js) | 실제 DOM 재렌더 검사·개발 페이지 조작 연결 |
 | [board-rendering.test.js](../tests/board-rendering.test.js) | 상태 필드·배열/Set 분리·단서/메모/충돌 표시·원본 불변·형식 검사 6개 |
@@ -100,3 +100,5 @@ Windows PowerShell, 기존 Node v24.22.1·npm CLI 8.19.4를 사용했다. 시스
 
 위 기록은 03·04 도구 실행 당시 이력이다. 이후 2026-10-23 사용자가 전체 53개 테스트 통과와 실제 보드·320px/1280px·checks·포커스/접근성·실패 주입/복원·콘솔 오류 없음·서버 종료를 확인했다.
 필수 조건을 충족해 003을 완료 처리했고 [05 커밋 메시지·PR 초안](pr-drafts/task-003.md)을 작성했다. 증거 출처와 별도 미확인인 실제 BFCache 복귀는 [최신 리뷰 판단](review-003.md)을 따른다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.
