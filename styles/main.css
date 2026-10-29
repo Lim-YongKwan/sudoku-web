@@ -3,6 +3,9 @@
   color: #203b2c;
   background: #f5f4ed;
   line-height: 1.6;
+  --digit-font: "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+  --digit-weight: 600;
+  --clue-weight: 700;
   --line: #bdc9bd;
   --box-line: #345443;
 }
@@ -45,18 +48,22 @@ h2 { font-size: 1.1rem; margin: 0; }
   display: grid;
   place-items: center;
   cursor: default;
+  font-family: var(--digit-font);
+  font-weight: var(--digit-weight);
   font-size: clamp(1rem, 4.5vw, 1.8rem);
   line-height: 1;
 }
+.cell-digit { font-variant-numeric: lining-nums tabular-nums; }
 .sudoku-cell:nth-child(9n) { border-right: 0; }
 .sudoku-cell:nth-child(n+73) { border-bottom: 0; }
 .sudoku-cell.box-right { border-right: 3px solid var(--box-line); }
 .sudoku-cell.box-bottom { border-bottom: 3px solid var(--box-line); }
-.sudoku-cell.is-clue { background: #edf1e9; color: #243b2b; font-weight: 750; }
+.sudoku-cell.is-clue { background: #edf1e9; color: #243b2b; font-weight: var(--clue-weight); }
 .sudoku-cell.is-selected { background: #e2efdc; }
 .sudoku-cell:disabled { opacity: 1; background: #f2f4ef; }
+.sudoku-cell.is-clue:disabled { background: #edf1e9; }
 .sudoku-cell:focus-visible { outline: 3px solid #bd651e; outline-offset: -4px; z-index: 1; }
-.cell-notes { position: absolute; inset: 2px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); font-size: clamp(.45rem, 1.7vw, .7rem); line-height: 1; color: #53624c; }
+.cell-notes { position: absolute; inset: 2px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); font-weight: 400; font-size: clamp(.45rem, 1.7vw, .7rem); line-height: 1; color: #53624c; }
 .cell-notes span { display: grid; place-items: center; }
 .sudoku-cell.is-conflict { box-shadow: inset 0 0 0 2px #b2352e; }
 .cell-error { position: absolute; right: 2px; bottom: 1px; font-size: .65rem; font-weight: 800; color: #a22c27; }
@@ -82,7 +89,7 @@ h2 { font-size: 1.1rem; margin: 0; }
   min-width: 0; min-height: 44px; padding: .35rem .15rem; border: 1px solid #8a9d80;
   border-radius: .35rem; background: #f3f7ee; color: #244b36; cursor: pointer;
 }
-.number-pad button { font-size: 1.1rem; font-weight: 650; }
+.number-pad button { font-family: var(--digit-font); font-size: 1.1rem; font-weight: var(--digit-weight); font-variant-numeric: lining-nums tabular-nums; }
 .input-actions { display: flex; gap: .5rem; margin-top: .5rem; }
 .input-actions button { flex: 1; }
 .input-actions [aria-pressed="true"] { background: #31583b; color: #fff; border-color: #31583b; font-weight: 700; }
