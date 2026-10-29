@@ -115,3 +115,12 @@ dialog h2 { margin-top:0; font-size:1.3rem; }
 .assistance-options input:focus-visible { outline: 3px solid #bd651e; outline-offset: 3px; }
 .number-pad button.is-stock-exhausted { background: #e1e3e6; color: #42494f; border-color: #869098; }
 .number-pad button[data-stock-remaining]::after { content: attr(data-stock-remaining) "/9"; display: block; font-family: system-ui, sans-serif; font-size: .6rem; font-weight: 500; line-height: 1.3; }
+
+/* Independent of selection backgrounds, conflict borders and the focus outline. */
+.sudoku-cell.is-last-input .cell-digit {
+  color: #985619;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: .12em;
+}
+.board-legend .legend-recent { border-bottom: 3px solid #985619; }

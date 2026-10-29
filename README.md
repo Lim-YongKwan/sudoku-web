@@ -2,10 +2,10 @@
 
 ## 현재 상태
 
-001~009 완료. 게임 원본은strict TypeScript이며 컴파일된Native ESM을브라우저에서 실행한다.
+001~010 로컬 완료(공개 배포는009까지). 게임 원본은strict TypeScript이며 컴파일된Native ESM을브라우저에서 실행한다.
 PR #3을main ebfb5b3에 병합해 숫자 스톡·보조 옵션 기반을 공개 배포했다. [Actions40824921514](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40824921514)의validate/deploy가 성공했고119개 검사가 모두 통과했다.
 [공개 게임](https://lim-yongkwan.github.io/sudoku-web/)의 스톡 표시·입력·옵션 초기화는 사용자가 정상 확인했다. 도구 직접 접속은 저장된 접근 제한으로 미실행이다.
-[009 최종 배포 기록](docs/deployment-009.md)에 사용자 보고와 도구 검증을 구분했다. 010~013은 예정이며 이번 요청은 완료 문서의main 커밋·push만 수행한다. 아래 과거 단계 기록은 당시 이력이다.
+[009 최종 배포 기록](docs/deployment-009.md)에 사용자 보고와 도구 검증을 구분했다. 010은 feat/task-010-last-input-highlight에서04 리뷰·보완·사용자133개 전체 통과/필수 UI 확인으로 완료했다. [010 최종 리뷰](docs/review-010.md)와 [05 초안](docs/pr-drafts/task-010.md)을 따른다. 011~013은 예정이며010 변경은 미커밋·미배포다. 아래 과거 단계 기록은 당시 이력이다.
 
 ## 실행 환경
 

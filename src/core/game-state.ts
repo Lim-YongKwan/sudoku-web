@@ -1,5 +1,6 @@
 import type { Action, GameState, GameStore, Listener } from '../types.js';
 import { assertBoard, isValidBoard, isComplete } from './board.js';
+import { assertLastInputIndex } from './last-input.js';
 import { DIFFICULTY_BLANKS } from './generator.js';
 
 const emptyNotes = () => Array.from({ length: 81 }, () => new Set<number>());
@@ -8,7 +9,7 @@ const emptyTimer = () => ({ startedAtMs: null, stoppedAtMs: null });
 export function createInitialState(): GameState {
   return {
     status: 'idle', puzzle: null, values: null, notes: emptyNotes(),
-    selectedIndex: null, noteMode: false, selectedDifficulty: 'easy',
+    selectedIndex: null, lastInputIndex: null, noteMode: false, selectedDifficulty: 'easy',
     activeDifficulty: null, requestId: 0, timer: emptyTimer(),
     completionDialogOpen: false, error: null,
     assistance: { showDigitStock: false, highlightMatchingDigits: false },
@@ -78,19 +79,19 @@ export function reduceGame(state: GameState, action: Action): GameState {
       if (state.status !== 'generating' || action.requestId !== state.requestId || action.difficulty !== state.activeDifficulty) return state;
       return {
         ...state, status: 'playing', puzzle: action.puzzle.slice(), values: action.puzzle.slice(),
-        selectedIndex: action.puzzle.indexOf(0), notes: emptyNotes(), noteMode: false,
+        selectedIndex: action.puzzle.indexOf(0), lastInputIndex: null, notes: emptyNotes(), noteMode: false,
         timer: { startedAtMs: action.nowMs, stoppedAtMs: null }, error: null,
       };
     case 'GENERATION_FAILED':
       if (state.status !== 'generating' || action.requestId !== state.requestId) return state;
       return {
-        ...state, status: 'error', puzzle: null, values: null, timer: emptyTimer(),
+        ...state, status: 'error', puzzle: null, values: null, lastInputIndex: null, timer: emptyTimer(),
         error: { code: action.code, message: action.message },
       };
     case 'GAME_COMPLETED':
       if (state.status !== 'playing' || !state.values || !state.puzzle || !isComplete(state.values, state.puzzle)) return state;
       if (state.timer.startedAtMs === null || action.nowMs < state.timer.startedAtMs) throw new RangeError('Completion time cannot precede start.');
-      return { ...state, status: 'completed', timer: { ...state.timer, stoppedAtMs: action.nowMs }, completionDialogOpen: true };
+      return { ...state, status: 'completed', lastInputIndex: null, timer: { ...state.timer, stoppedAtMs: action.nowMs }, completionDialogOpen: true };
     case 'CLOSE_COMPLETION_DIALOG':
       return state.status === 'completed' && state.completionDialogOpen ? { ...state, completionDialogOpen: false } : state;
   }
@@ -127,7 +128,9 @@ export function reduceGame(state: GameState, action: Action): GameState {
   if (state.values[index] === digit && state.notes[index].size === 0) return state;
   const values = state.values.slice();
   values[index] = digit; notes[index] = new Set<number>();
-  return { ...state, values, notes };
+  const lastInputIndex = state.values[index] === digit ? state.lastInputIndex
+    : digit !== 0 ? index : state.lastInputIndex === index ? null : state.lastInputIndex;
+  return { ...state, values, notes, lastInputIndex };
 }
 
 /** getState returns a read-only view by contract; subscribers must never mutate it. */
@@ -146,6 +149,7 @@ export function createGameStore(initialState: GameState = createInitialState()):
   }
   if (initialState.puzzle !== null) assertBoard(initialState.puzzle);
   if (initialState.values !== null) assertBoard(initialState.values);
+  assertLastInputIndex(initialState);
   let state: GameState = {
     ...initialState, assistance: { ...initialState.assistance }, puzzle: initialState.puzzle?.slice() ?? null, values: initialState.values?.slice() ?? null,
     notes: initialState.notes.map((notes) => new Set(notes)), timer: { ...initialState.timer },

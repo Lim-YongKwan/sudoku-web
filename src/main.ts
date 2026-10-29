@@ -24,6 +24,7 @@ export function createDisplayState(puzzle: Board | null = null): GameState {
     values: puzzle === null ? null : puzzle.slice(),
     notes: Array.from({ length: 81 }, () => new Set<number>()),
     selectedIndex: puzzle === null || !puzzle.includes(0) ? null : puzzle.findIndex((digit) => digit === 0),
+    lastInputIndex: null,
     noteMode: false, selectedDifficulty: 'easy', activeDifficulty: 'easy',
     requestId: 1, timer: { startedAtMs: null, stoppedAtMs: null },
     completionDialogOpen: false, error: null,

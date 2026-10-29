@@ -37,6 +37,7 @@ export interface GameState {
   readonly status: 'idle' | 'generating' | 'playing' | 'completed' | 'error';
   readonly puzzle: Board | null; readonly values: Board | null;
   readonly notes: readonly ReadonlySet<number>[]; readonly selectedIndex: number | null;
+  readonly lastInputIndex: number | null;
   readonly assistance: Assistance;
   readonly noteMode: boolean; readonly selectedDifficulty: Difficulty; readonly activeDifficulty: Difficulty | null;
   readonly requestId: number; readonly timer: Timer; readonly completionDialogOpen: boolean;
