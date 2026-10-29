@@ -1,10 +1,12 @@
 import type { Action, GameState } from '../types.js';
+import { renderDigitStock } from './digit-stock.js';
 import { formatElapsed } from '../utils/time.js';
 
 const labels = { easy: '쉬움', normal: '보통', hard: '어려움' };
 
 /** Owns only controls/dialog listeners. Board input is owned by events.js. */
 export function bindControls(scope: HTMLElement, dispatch: (action: Action) => void, newGame: () => Promise<void>) {
+  const stock = scope.querySelector<HTMLInputElement>('[data-show-digit-stock]');
   const select = scope.querySelector<HTMLSelectElement>('[data-difficulty]');
   const restart = scope.querySelector<HTMLButtonElement>('[data-new-game]');
   const timer = scope.querySelector('[data-elapsed]');
@@ -16,6 +18,9 @@ export function bindControls(scope: HTMLElement, dispatch: (action: Action) => v
   const change = () => {
     const value = select?.value;
     if (value === 'easy' || value === 'normal' || value === 'hard') dispatch({ type: 'SET_DIFFICULTY', difficulty: value });
+  };
+  const changeStock = () => {
+    if (stock && !stock.disabled) dispatch({ type: 'SET_ASSISTANCE', option: 'showDigitStock', enabled: stock.checked });
   };
   const start = () => { void newGame(); };
   const dismiss = () => {
@@ -29,6 +34,7 @@ export function bindControls(scope: HTMLElement, dispatch: (action: Action) => v
     // A delayed close event from an older dialog must not close a newly opened one.
     if (!dialog?.open) dismiss();
   };
+  stock?.addEventListener('change', changeStock);
   select?.addEventListener('change', change);
   restart?.addEventListener('click', start);
   close?.addEventListener('click', dismiss);
@@ -42,6 +48,11 @@ export function bindControls(scope: HTMLElement, dispatch: (action: Action) => v
   const render = (state: GameState, seconds: number) => {
     if (disposed) return;
     completionOpen = state.completionDialogOpen;
+    if (stock) {
+      stock.checked = state.assistance.showDigitStock;
+      stock.disabled = state.status !== 'playing';
+      renderDigitStock(scope, state);
+    }
     if (select) select.value = state.selectedDifficulty;
     if (restart) restart.textContent = state.status === 'error' ? '다시 시도' : '새 게임';
     if (active) active.textContent = state.activeDifficulty ? labels[state.activeDifficulty] : '준비 중';
@@ -56,6 +67,7 @@ export function bindControls(scope: HTMLElement, dispatch: (action: Action) => v
   const dispose = () => {
     if (disposed) return;
     disposed = true;
+    stock?.removeEventListener('change', changeStock);
     select?.removeEventListener('change', change);
     restart?.removeEventListener('click', start);
     close?.removeEventListener('click', dismiss);

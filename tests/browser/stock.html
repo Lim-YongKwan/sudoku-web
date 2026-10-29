@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>009 숫자 스톡 검증 · 개발 전용</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../styles/main.css">
+  <script type="module" src="./stock-checks.js"></script>
+</head>
+<body>
+<main class="game-shell">
+  <header class="page-header">
+    <p class="eyebrow">DEVELOPMENT FIXTURE</p>
+    <h1>009 숫자 스톡 검증</h1>
+    <p class="intro">고정 store를 사용하는 개발 전용 화면입니다. 스톡 표본은 중복 숫자를 포함하며 플레이 가능한 퍼즐이 아닙니다.</p>
+  </header>
+  <div class="fixture-controls">
+    <button type="button" data-sample="8">스톡 8개</button>
+    <button type="button" data-sample="9">스톡 9개</button>
+    <button type="button" data-sample="10">스톡 10개</button>
+    <button type="button" data-sample="complete">완료 직전</button>
+    <button type="button" data-sample="fail">첫 요청 실패</button>
+    <button type="button" data-sample="delay">첫 요청 지연</button>
+    <button type="button" id="resolve-delay">오래된 응답 전달</button>
+    <button type="button" id="stock-check">스톡 실측 검사</button>
+  </div>
+  <section class="board-card" id="input-scope">
+    <h2>게임 제어·시간·완료 검사</h2>
+<div class="game-controls">
+<label for="difficulty">다음 게임 난이도<select id="difficulty" data-difficulty><option value="easy">쉬움</option><option value="normal">보통</option><option value="hard">어려움</option></select></label>
+<button type="button" data-new-game>새 게임</button>
+<p class="elapsed">현재 <span data-active-difficulty></span> · 경과 <span data-elapsed role="timer" aria-live="off">00:00</span></p>
+</div>
+    <label for="outside-text">외부 텍스트 입력</label>
+    <input id="outside-text" type="text" placeholder="숫자·삭제·방향키를 입력하세요">
+    <label for="outside-select">외부 선택</label>
+    <select id="outside-select"><option>첫 번째</option><option>두 번째</option></select>
+        <div class="assistance-options" role="group" aria-label="보조 옵션">
+          <label><input type="checkbox" data-show-digit-stock aria-describedby="digit-stock-help" disabled> 숫자 스톡 표시</label>
+          <p id="digit-stock-help" class="board-help" data-stock-help hidden>버튼 아래는 남은 스톡/9입니다. 고정 단서와 입력을 세며 메모는 제외합니다. 회색은 9개 이상 사용했다는 뜻이며 정답 여부와 관계없이 추가 입력할 수 있습니다.</p>
+        </div>
+    <p id="interaction-status" class="status-message" role="status"></p>
+    <div id="controls-board" role="group" aria-label="입력 검증용 스도쿠"></div>
+    <p class="conflict-message" data-conflicts role="status" aria-live="polite"></p>
+    <div class="number-pad" role="group" aria-label="숫자 입력">
+      <button type="button" data-digit="1">1</button>
+      <button type="button" data-digit="2">2</button>
+      <button type="button" data-digit="3">3</button>
+      <button type="button" data-digit="4">4</button>
+      <button type="button" data-digit="5">5</button>
+      <button type="button" data-digit="6">6</button>
+      <button type="button" data-digit="7">7</button>
+      <button type="button" data-digit="8">8</button>
+      <button type="button" data-digit="9">9</button>
+    </div>
+    <div class="input-actions" role="group" aria-label="입력 도구">
+      <button type="button" data-input-action="clear">지우기</button>
+      <button type="button" data-input-action="notes" aria-pressed="false">메모</button>
+    </div>
+  <dialog data-completion-dialog aria-labelledby="completion-title" aria-describedby="completion-description">
+<h2 id="completion-title">퍼즐 완성을 축하합니다!</h2>
+<p id="completion-description">경과 시간 <span data-completion-time>00:00</span></p>
+<button type="button" data-close-dialog autofocus>닫기</button>
+</dialog>
+</section>
+  <pre id="controls-report" class="fixture-report">초기화 중</pre>
+  <p class="board-help">스톡 표본은 고정 단서9 하나와 입력 숫자를 합쳐 8/9/10개입니다. 셀 메모9는 집계하지 않습니다. 스톡 토글 ON 후 패드9로 추가 입력·삭제를 확인하세요. 완료 직전은 선택 셀에4를 입력합니다. 각 표본 변경은 별도 게임으로 옵션을OFF로 초기화합니다.</p>
+</main>
+</body>
+</html>
