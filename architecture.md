@@ -1,7 +1,7 @@
 # 스도쿠 프로젝트 아키텍처
 
 - 마지막 갱신: 2026-10-29
-- 현재 단계: 001~007 완료. TS 컴파일·로컬 재현·PR #1 main 병합·Actions 공개 배포와 사용자 공개 게임 확인을 마쳤다.
+- 현재 단계: 001~008 완료. 008은04 리뷰·수정과 사용자105개 전체 통과·필수 UI/터치 확인으로 완료했다. 공개 배포는007이며008은 사용자 승인으로 feature 브랜치의 로컬 커밋에 저장한다. push·main 반영은 미실행이다.
 - DOM 독립 엔진은 구현됐다. 003 보드 표시·엔진 초기 생성 연결을 구현했다. 004 상태 store·입력·완료 상태를 구현하고 04 리뷰·수정을 수행했다. 004 필수 UI·터치는 사용자 확인으로 충족했고 005 게임 제어·시간 표시·dialog를 구현했으며 04 리뷰·수정과 사용자 잔여 검증 후005를 완료했다. 환경 검증은 [001 기록](docs/review-001.md), 엔진 구현·측정은 [002 기록](docs/engine-002.md)을 따른다.
 
 ## 현재 코드와 책임
@@ -14,7 +14,7 @@
 | [scripts/serve.mjs](scripts/serve.mjs) | CLI·실제 주소/PID·PORT·중복 종료 방지·시작 후 오류 정리·소유 부모 IPC 종료 |
 | [index.html](index.html) | 보드·입력 도구·난이도·새 게임·타이머·native dialog·상태와 ESM 진입점 |
 | [src/main.ts](src/main.ts) | mountGame으로 생성 Action·store·입력·렌더·완료·정리·캐시 복귀 연결 |
-| [styles/main.css](styles/main.css) | 9열 Grid·3x3 경계·단서/빈칸·포커스·반응형 보드 스타일 |
+| [styles/main.css](styles/main.css) | 9열 Grid·3x3 경계·단서/빈칸·포커스·반응형, 008 공통 숫자 서체·입력600/단서700 |
 | [tests/server.test.js](tests/server.test.js) | 실제 HTTP·MIME·파일 경계·종료·포트·설정의 내장 테스트 |
 | [.gitignore](.gitignore) | 향후 node_modules·coverage·로그·실제 환경값 제외 |
 | [src/core/board.ts](src/core/board.ts) | 보드 형식·모든 충돌 인덱스·유효성·단서 보존 완료 판정 |
@@ -170,3 +170,19 @@ e7624b6의 새 worktree에서 설치·타입/빌드·HTTP/종료와 전 회귀(9
 
 현재 Pages 소스는 GitHub Actions다. main ebb3bfb의 validate가 설치·타입·99개 전체 검사·빌드·artifact 업로드를 통과했고 deploy도 성공했다.
 공개 게임 정상 동작은 사용자 보고로 확인했다. [최종 기록](docs/deployment-007.md)을 따른다. D-004가 현재 원본/도구/배포 기준이며 D-001은 대체됨이다.
+
+## 008 부드러운형 숫자 — 03 구현
+
+[styles/main.css](styles/main.css)는 숫자 전용 CSS 변수로 로컬 서체 스택·입력600/단서700을 공유한다. 같은 크기·Grid 정렬·단서 배경을 유지하고 메모400·오류800은 따로 둔다. 숫자 패드도 같은 서체를 사용한다. 실제 글꼴·지원 굵기는 아직 관찰하지 않았다.
+[개발 비교 페이지](tests/browser/typography.html)와 [검사 코드](tests/browser/typography-checks.js)는 렌더러에 1~9 비교 배열과 상태를 주입한다. CSS 실측·텍스트 영역·경계·잠금 검사 버튼을 제공하지만 실제 브라우저 실행은 미확인이다. 개발 빌드에만 포함한다.
+[D-005](docs/decisions/005-assistance-highlights-and-undo.md)의 숫자 디자인 부분만 반영했다. 009~013 상태/옵션·강조·취소·저장은 미구현이다. [008 기록](docs/typography-008.md)의 자동 검증과 UI 중단 한계를 따른다. core·TS 모듈·데이터 흐름·빌드/배포 설정은 변경하지 않았다.
+
+## 008의 04 수정
+
+완료 시에도 고정 셀 배경을 유지하도록 CSS를 보완했다. 개발 비교 페이지는 [상태 builder](tests/browser/typography-state.js)와 [측정 판정](tests/browser/typography-assertions.js)을 분리했다. 유효한 완성 보드, 같은1~9·메모 수·스타일·단서 배경·잠금을 확인하는 개발 검사이며 실제 게임 상태를 바꾸지 않는다. [관련 검사6개](tests/typography.test.js)와 [04 기록](docs/review-008.md)의105개 집계를 따르며 실제 UI·fallback은 미확인이다.
+
+## 008 최종 완료 — 2026-10-29
+
+사용자는 안내 절차에 따라 테스트105개가 모두 통과했고 숫자 디자인·실측 checks·완료 후 단서 배경·반응형·키보드·터치·포커스·완료 대화상자·콘솔 오류 없음·서버 종료를 확인했다고 보고했다.
+[04 최종 근거](docs/review-008.md)와 [05 초안](docs/pr-drafts/task-008.md)을 따른다. 실제 렌더링 서체 이름·브라우저 버전·터치 기기/에뮬레이션 구분·스크린샷·원시 로그는 미제공이다. 특정 플랫폼/글꼴을 직접 관찰했다고 기록하지 않는다.
+D-005의 숫자 디자인만 완료됐고009~013은 여전히 미구현이다. 커밋·push·원격 CI·배포는 미실행이다.
