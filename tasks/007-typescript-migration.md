@@ -1,16 +1,16 @@
 # 007 Vanilla TypeScript 전환·빌드·검증·Pages 정비
 
-> 04 리뷰·수정·사용자 로컬 확인과 커밋 기반 checkout 재현을 수행했다. 실제 Actions·공개 배포 확인이 남아 완료가 아니다.
+> 구현·리뷰·checkout 재현·Actions 배포와 사용자 공개 게임 확인을 마쳐 2026-10-29 완료했다. 이전 실패·미실행 기록은 당시 이력이다.
 
 - 작업 ID: 007
-- 상태: 진행 중
+- 상태: 완료
 - 담당: Codex
 - 담당 브랜치: feat/task-007-typescript-migration
-- 브랜치 상태: feat/task-007-typescript-migration의 구현을 e7624b6으로 로컬 커밋했다. 새 detached worktree는 해당 SHA에 고정했다. 이번 구현/후속 기록은 아직 push하지 않았다.
+- 브랜치 상태: feature의 e7624b6·cfbf47f를 push한 뒤 PR #1을 main에 병합했다. 병합 커밋은 ebb3bfb다. 완료 문서는 후속 요청에 따른 main 문서 커밋으로 공유한다.
 - 선행 작업: [006 공개 배포](006-github-pages-deployment.md), [001~005·인수 결과](../docs/acceptance/sudoku-mvp.md)
 - 코드 기준: 1c45a8b의 확정 명세·기존 JS 구현. main의 배포 문서·007~013 명세 커밋 후 전용 브랜치에서 구현한다.
 - 작성일 / 마지막 갱신: 2026-10-28 / 2026-10-29
-- 관련 이슈 / PR: 없음
+- 관련 이슈 / PR: [#1 — 병합됨](https://github.com/Lim-YongKwan/sudoku-web/pull/1)
 
 ## 1. 배경과 목표
 
@@ -21,8 +21,8 @@
 
 - [현재 AGENTS](../AGENTS.md), [현재 구조](../architecture.md), [작업 목록](README.md).
 - [후속 작업의 공통 계약](../docs/plans/sudoku-next-iteration.md), [리뷰 기준](../docs/review-checklist.md).
-- 관련 설계 결정: [D-004](../docs/decisions/004-typescript-toolchain.md), 현재 [D-001](../docs/decisions/001-native-esm-and-tooling.md)
-- 현재 브랜치는 TS 원본·로컬 빌드/타입 명령을 구현했다. 실제 공개 사이트의 이전 JS 배포와 구분한다. [03 구현 기록](../docs/typescript-007.md)을 따른다.
+- 관련 설계 결정: [D-004 — 반영 완료](../docs/decisions/004-typescript-toolchain.md), [D-001 — 대체됨](../docs/decisions/001-native-esm-and-tooling.md)
+- TS 원본·로컬 빌드/검증·실제 Actions 공개 배포 전환을 마쳤다. [배포 완료 기록](../docs/deployment-007.md)의 도구 관찰과 사용자 확인 범위를 구분한다.
 - 실제 선행 코드·타입·검증 증거와 현재 체크아웃을 확인한다. 다른 변경을 자동 stash/reset/강제 체크아웃하지 않는다.
 
 ## 3. 작업 범위
@@ -63,10 +63,10 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 - [x] TS-02: 깨끗한 checkout에서 npm ci·타입 검사·개발/배포 빌드·start가 재현되고 출력이 분리된다.
 - [x] TS-03: 기존 92개 검증 시나리오를 보존하고 최신 컴파일 결과로 전 회귀를 수행한다. 개수 감소/skip은 근거를 기록한다.
 - [x] TS-04: 타입 오류·오래된 출력·누락 자산·서버 경계를 검증하고 실패한 코드를 배포하지 않는다.
-- [ ] TS-05: Actions의 검증된 dist 배포·기존 공개URL·브라우저 게임 회귀를 확인한다.
+- [x] TS-05: Actions의 검증된 dist 배포·기존 공개URL·브라우저 게임 회귀를 확인한다.
 - [x] TS-06: 루트 AGENTS·README·architecture·관련 결정의 실제 전환 상태를 일치시킨다.
 - [x] DOC-01: 실제 적용 범위·현재 구조·관련 결정·작업 목록·링크가 코드와 일치한다.
-- [ ] REV-01: 04 리뷰·수정·재검증과 모든 필수 조건을 충족했다.
+- [x] REV-01: 04 리뷰·수정·재검증과 모든 필수 조건을 충족했다.
 
 ## 5. 진행 항목
 
@@ -118,17 +118,14 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 
 ## 8. 남은 문제와 차단 요소
 
-- 로컬 테스트 99개 전체 통과·브라우저·터치 에뮬레이션·반응형·완료 dialog·콘솔·서버 종료는 사용자 확인으로 충족했다.
-- e7624b6을 새 worktree에 checkout해 설치·타입/개발/배포 빌드·전 회귀·start/HTTP/종료를 검증했다. 99개 중 98 통과·0 실패·1 Windows 권한 skip이며 사용자 99개 전체 통과 보고와 구분한다.
-- feature push·PR 검증 성공 뒤 main 반영 직전에 Pages 소스를 Actions로 전환한다. 원격 변경은 별도 승인 후 진행한다.
-- 실제 main Actions의 validate/deploy·공개 URL의 새 배포 동작을 확인한다. TS-02는 충족했으며 TS-05·REV-01은 실제 배포 확인 전까지 미체크다.
-- 실제 휴대전화/물리 터치는 미검증이며 현재 확인 범위는 에뮬레이션이다. 이를 완료됐다고 확대하지 않는다.
-- 이번 요청으로 구현 커밋·새 worktree·재현 검증·후속 문서 커밋을 진행했다. push·PR·병합·Pages 원격 변경은 하지 않는다.
+필수 완료 조건은 충족했다. 공개 게임 직접 관찰은 권한으로 차단돼 사용자 정상 동작 보고를 근거로 했으며, 실제 휴대전화 터치를 검증한 것으로 확대하지 않는다.
+이전 권한 오류·skip·브라우저 중단 이력은 보존한다. 후속 요청으로 로컬 main을 병합 커밋에 동기화하고 완료 문서를 main 문서 커밋으로 공유한다.
+
 ## 9. 완료 요약
 
-- 현재 결과: 04 리뷰·수정을 수행했고 사용자 최종 로컬 재확인은 99 통과·0 실패·0 skip이다. 브라우저·터치 에뮬레이션·반응형·완료·콘솔·서버 종료를 확인했다. checkout 재현은 완료했고 Actions 배포 대기로 진행 중이다.
-- 완료일: 미정.
-- PR 초안: 없음. 완료 판단 후05에서 실제 diff·검증 근거로 작성한다.
+- 최종 결과: TypeScript 전환·리뷰·재현·실제 Actions 배포·사용자 공개 게임 확인 완료. main CI는 99 통과·0 실패·0 skip이다.
+- 완료일: 2026-10-29.
+- 실제 PR: #1 병합 완료. [최종 배포 기록](../docs/deployment-007.md)을 따른다.
 ## 04 재검증 결과 — 2026-10-29
 
 - [상세 리뷰·수정·남은 확인](../docs/review-007.md)을 따른다. 앞의 97개 결과와 03 브라우저 시간 초과는 당시 이력이다.
@@ -156,3 +153,9 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 구현 커밋 e7624b6f1143d9b47074ed5a4ee28403d905d0bb에서 기존 출력/의존성이 없는 상태로 재현했다.
 검증 후에도 해당 worktree의 Git 상태는 깨끗하다. TS-02를 충족했고 실제 Actions/공개 배포 전이라 상태는 진행 중을 유지한다.
 기존 사용자 확인·도구 권한 제약 이력은 보존한다. 이번 구현과 재현 기록은 아직 push하지 않았다.
+
+## 최종 공개 배포 확인 — 2026-10-29
+
+Pages 소스 Actions 전환 → PR #1 병합(ebb3bfb) → Actions 40799747303의 validate/deploy 성공을 확인했다.
+사용자가 공개 주소의 보드·숫자 입력·새 게임·타이머 정상 동작을 보고했다. 도구가 직접 플레이한 것으로 기록하지 않는다.
+기존 로컬 UI/완료 검사와 main CI 99개 전체 통과를 연결해 TS-05·REV-01을 체크하고 완료 처리했다.

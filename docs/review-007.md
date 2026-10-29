@@ -4,7 +4,7 @@
 - 대상: [007 작업](../tasks/007-typescript-migration.md), [03 구현 기록](typescript-007.md).
 - 브랜치: feat/task-007-typescript-migration, HEAD 1c45a8b.
 - 기존 03의 미커밋 구현을 보존하고 그 위에서 리뷰·수정했다. 커밋·push·병합·Pages 원격 변경은 없다.
-- 현재 판정: 로컬 리뷰·사용자 확인과 e7624b6의 깨끗한 checkout 재현을 마쳤다. 실제 Actions/공개 배포 대기로 전체 완료를 보류한다. 아래 초기 도구 중단과 당시 미실행 기록은 이력이다.
+- 현재 판정: 로컬 리뷰·사용자 확인·checkout 재현·실제 Actions 배포와 사용자 공개 게임 확인을 마쳐 007 완료. 아래 초기 도구 중단과 대기 기록은 당시 이력이다.
 
 ## 발견 사항과 수정
 
@@ -110,3 +110,7 @@ GitHub 공식 참고: [custom Pages workflows](https://docs.github.com/en/pages/
 사용자 승인으로 구현 커밋 e7624b6을 저장하고 새 worktree에서 재현 검증했다. [checkout 기록](checkout-007.md)을 따른다.
 TS-02는 충족했다. 위 계획의 커밋/checkout 단계는 실행됐으며, 원격 push·PR·Pages 전환·실제 Actions/공개 URL 확인은 여전히 미실행이다.
 후속 변경은 재현 결과 문서만이며 게임 코드·의존성·빌드/workflow를 바꾸지 않았다.
+
+## 007 최종 완료 후속 — 2026-10-29
+
+[공개 배포 완료 기록](deployment-007.md)에 PR #1 병합·main ebb3bfb·Actions 40799747303의 validate/deploy 성공·CI 99개 전체 통과와 사용자 공개 게임 확인을 연결했다. 007은 완료이며 위 대기/미실행 내용은 당시 이력이다. 완료 문서는 후속 요청에 따른 main 문서 커밋으로 공유한다.

@@ -3,11 +3,11 @@
 - 결정 ID: D-004
 - 상태: 채택됨
 - 작성일 / 결정일: 2026-10-28 / 2026-10-28
-- 현재 적용 범위와 반영 상태: 007에서 TS 원본·strict 타입·고정 개발 컴파일러·로컬 빌드/검증·AGENTS·workflow 파일을 반영했다. 실제 원격 Pages 전환과 배포는 미실행이다.
+- 현재 적용 범위와 반영 상태: 007의 TS·개발 도구·로컬 검증·Pages Actions 전환을 실제 배포하고 사용자 공개 게임 확인까지 마쳤다.
 - 근거: 사용자가TypeScript 전환을최우선 007로지정하고이전 전환 추천을 수용한 뒤실제명세·AGENTS수정안작성을요청.
 - 관련: [수정안](../plans/agents-typescript-proposal.md)·[후속 계획](../plans/sudoku-next-iteration.md).
-- 현재 구조: [architecture](../../architecture.md)는 로컬 TS 전환과 기존 공개 JS 배포를 구분한다.
-- 이전 결정: [D-001](001-native-esm-and-tooling.md)의개발 도구·원본 언어·빌드/배포조항을대체할예정. 실제 전환 전D-001은채택됨을 유지한다.
+- 현재 구조: [architecture](../../architecture.md)는 TS 컴파일·검증 후 dist의 Actions 배포를 설명한다.
+- 이전 결정: [D-001](001-native-esm-and-tooling.md)의 원본 언어·도구·빌드/배포 범위를 대체했다. D-001은 2026-10-29 대체됨으로 갱신했다.
 - 대체한 후속 결정: 없음.
 
 ## 배경과 제약
@@ -57,3 +57,7 @@ TypeScript 7.0.2·원본 전환·로컬 빌드·타입·테스트·AGENTS를 반
 2026-10-29 사용자 후속 확인: 99개 전체 통과·로컬 브라우저·터치 에뮬레이션·반응형·완료 dialog·콘솔·서버 종료를 보고받았다. checkout·실제 Actions/공개 배포 대기로 부분 반영 상태와 D-001 전체 대체 보류를 유지한다. 이번에는 문서만 갱신했다.
 
 2026-10-29 checkout 후속: e7624b6을 새 worktree에서 설치·타입/빌드·HTTP/종료·전 회귀로 재현했다. [기록](../checkout-007.md)에 98 통과·0 실패·1 권한 skip과 환경 제약을 구분했다. 로컬 TS-02를 충족했고 원격 Actions/공개 배포·D-001 전체 대체는 아직 대기다.
+
+## 실제 전환 완료 — 2026-10-29
+
+[배포 기록](../deployment-007.md)의 PR #1·main ebb3bfb·Actions validate/deploy 성공·사용자 공개 게임 확인을 근거로 007을 완료했다. D-001과 목록의 대체 관계를 갱신했다.
