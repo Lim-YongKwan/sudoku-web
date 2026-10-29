@@ -1,4 +1,5 @@
 import { stockPresentationChecks } from './stock-assertions.js';
+import { matchingToggleCheck } from './matching-assertions.js';
 import { createInitialState } from '../../src/core/game-state.js';
 import { getDigitStock } from '../../src/core/digit-stock.js';
 import { mountGame } from '../../src/main.js';
@@ -32,7 +33,13 @@ function facts(){
    correctUsage:stock.length===9&&stock.every((item,i)=>item.digit===i+1&&item.usedCount===reference[i]),
    correctRemaining:stock.length===9&&stock.every(item=>item.remaining===Math.max(0,9-item.usedCount)),
    ...stockPresentationChecks(measurements),
-   hiddenMatchingToggle:scope.querySelector('[data-highlight-matching-digits]')===null,
+   matchingToggle:matchingToggleCheck({
+     count:scope.querySelectorAll('[data-highlight-matching-digits]').length,
+     checked:scope.querySelector('[data-highlight-matching-digits]')?.checked,
+     disabled:scope.querySelector('[data-highlight-matching-digits]')?.disabled,
+     labeled:(scope.querySelector('[data-highlight-matching-digits]')?.labels?.length??0)>0,
+     enabled:state.assistance.highlightMatchingDigits,playing:state.status==='playing',
+   }),
  };
  return {status:state.status,assistance:state.assistance,selectedIndex:state.selectedIndex,nine:stock[8],timer:state.timer,measurements,checks};
 }

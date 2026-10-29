@@ -3,6 +3,7 @@ import { createInitialState } from '../../src/core/game-state.js';
 import { mountGame } from '../../src/main.js';
 import { bindInput } from '../../src/ui/events.js';
 import { lastInputChecks } from './last-input-assertions.js';
+import { matchingChecks } from './matching-assertions.js';
 
 const root = document.querySelector('#interaction-board');
 const scope = document.querySelector('#input-scope');
@@ -16,18 +17,32 @@ function showReport() {
     const digit = cell.querySelector('.cell-digit');
     const style = getComputedStyle(digit);
     const rect = digit.getBoundingClientRect();
-    return { index: Number(cell.dataset.index), recent: cell.classList.contains('is-last-input'),
+    return { matching: cell.classList.contains('is-matching'), index: Number(cell.dataset.index), recent: cell.classList.contains('is-last-input'),
       fixed: cell.classList.contains('is-clue'), disabled: cell.disabled, digit: digit.textContent,
       label: cell.getAttribute('aria-label'),
       underline: style.textDecorationLine.split(' ').includes('underline'),
       thickness: Number.parseFloat(style.textDecorationThickness),
       visible: style.visibility === 'visible' && style.display !== 'none' && rect.width > 0 && rect.height > 0 };
   });
-  const checks = lastInputChecks({ expectedIndex: state.lastInputIndex, cells,
-    viewport: window.innerWidth, scrollWidth: document.documentElement.scrollWidth });
+  const matchingToggle = scope.querySelector('[data-highlight-matching-digits]');
+  const selectedDigit = state.status === 'playing' && state.assistance.highlightMatchingDigits
+    && state.selectedIndex !== null ? state.values?.[state.selectedIndex] ?? 0 : 0;
+  const expectedIndices = selectedDigit ? state.values.flatMap((digit, index) => digit === selectedDigit ? [index] : []) : [];
+  const checks = {
+    ...lastInputChecks({ expectedIndex: state.lastInputIndex, cells,
+      viewport: window.innerWidth, scrollWidth: document.documentElement.scrollWidth }),
+    ...matchingChecks({ expectedIndices, cells, toggle: {
+      count: scope.querySelectorAll('[data-highlight-matching-digits]').length,
+      checked: matchingToggle?.checked, disabled: matchingToggle?.disabled,
+      labeled: (matchingToggle?.labels?.length ?? 0) > 0,
+      enabled: state.assistance.highlightMatchingDigits, playing: state.status === 'playing',
+    } }),
+  };
   report.dataset.result = Object.values(checks).every(Boolean) ? 'pass' : 'fail';
   report.textContent = JSON.stringify({
     checks,
+    assistance: state.assistance,
+    matchingIndices: [...root.querySelectorAll('.is-matching')].map(cell => Number(cell.dataset.index)),
     lastInputIndex: state.lastInputIndex,
     recentCells: [...root.querySelectorAll('.is-last-input')].map((cell) => ({ index: Number(cell.dataset.index), label: cell.getAttribute('aria-label') })),
     status: state.status, selectedIndex: state.selectedIndex, noteMode: state.noteMode,

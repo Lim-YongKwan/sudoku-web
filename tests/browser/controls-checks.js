@@ -12,6 +12,8 @@ function showReport() {
   const state = app.store.getState();
   report.textContent = JSON.stringify({
     status:state.status, requestId:state.requestId,
+    assistance:state.assistance,
+    matchingCount:root.querySelectorAll('.is-matching').length,
     lastInputIndex:state.lastInputIndex,
     recentCount:root.querySelectorAll('.is-last-input').length,
     selectedDifficulty:state.selectedDifficulty, activeDifficulty:state.activeDifficulty,

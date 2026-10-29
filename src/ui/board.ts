@@ -22,7 +22,11 @@ export function getCellModels(state: GameState) {
   if (selectedIndex !== null && (!Number.isInteger(selectedIndex) || selectedIndex < 0 || selectedIndex > 80)) {
     throw new RangeError('selectedIndex must be null or an index from 0 to 80.');
   }
+  if (!state.assistance || typeof state.assistance.showDigitStock !== 'boolean'
+    || typeof state.assistance.highlightMatchingDigits !== 'boolean') throw new TypeError('Assistance requires two booleans.');
   assertLastInputIndex(state);
+  const selectedDigit = status === 'playing' && state.assistance.highlightMatchingDigits
+    && selectedIndex !== null && values !== null ? values[selectedIndex] : 0;
   const conflicts = values === null ? new Set() : findConflicts(values);
   // Keyboard access must survive a valid null selection without mutating state.
   const firstEmpty = values === null ? -1 : values.indexOf(0);
@@ -42,8 +46,10 @@ export function getCellModels(state: GameState) {
     if (conflict) labels.push('중복 오류');
     const recent = state.lastInputIndex === index;
     if (recent) labels.push('최근 입력');
+    const matching = selectedDigit !== 0 && value === selectedDigit;
+    if (matching) labels.push('선택한 숫자와 같음');
     return {
-      index, value, fixed, conflict, recent, notes: cellNotes, label: labels.join(', '),
+      index, value, fixed, conflict, recent, matching, notes: cellNotes, label: labels.join(', '),
       selected: selectedIndex === index,
       tabIndex: values !== null && status === 'playing' && focusIndex === index ? 0 : -1,
       disabled: values === null || status !== 'playing',
@@ -97,6 +103,7 @@ export function renderBoard(root: HTMLElement, state: GameState): void {
     button.classList.toggle('is-conflict', model.conflict);
     button.classList.toggle('is-selected', model.selected);
     button.classList.toggle('is-last-input', model.recent);
+    button.classList.toggle('is-matching', model.matching);
     button.classList.toggle('box-right', model.boxRight);
     button.classList.toggle('box-bottom', model.boxBottom);
     button.tabIndex = model.tabIndex;
