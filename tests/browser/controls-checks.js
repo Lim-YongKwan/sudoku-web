@@ -12,6 +12,8 @@ function showReport() {
   const state = app.store.getState();
   report.textContent = JSON.stringify({
     status:state.status, requestId:state.requestId,
+    lastInputIndex:state.lastInputIndex,
+    recentCount:root.querySelectorAll('.is-last-input').length,
     selectedDifficulty:state.selectedDifficulty, activeDifficulty:state.activeDifficulty,
     blankCount:state.puzzle?.filter(n=>n===0).length, timer:state.timer,
     completionDialogOpen:state.completionDialogOpen,

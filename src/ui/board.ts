@@ -1,6 +1,7 @@
 import type { GameState } from '../types.js';
 interface RenderedCell { button: HTMLButtonElement; digit: HTMLSpanElement; markers: HTMLSpanElement[]; error: HTMLSpanElement }
 import { assertBoard, findConflicts } from '../core/board.js';
+import { assertLastInputIndex } from '../core/last-input.js';
 
 const renderedBoards = new WeakMap<HTMLElement, RenderedCell[]>();
 
@@ -21,6 +22,7 @@ export function getCellModels(state: GameState) {
   if (selectedIndex !== null && (!Number.isInteger(selectedIndex) || selectedIndex < 0 || selectedIndex > 80)) {
     throw new RangeError('selectedIndex must be null or an index from 0 to 80.');
   }
+  assertLastInputIndex(state);
   const conflicts = values === null ? new Set() : findConflicts(values);
   // Keyboard access must survive a valid null selection without mutating state.
   const firstEmpty = values === null ? -1 : values.indexOf(0);
@@ -38,8 +40,10 @@ export function getCellModels(state: GameState) {
     ];
     if (cellNotes.length) labels.push('메모 ' + cellNotes.join(', '));
     if (conflict) labels.push('중복 오류');
+    const recent = state.lastInputIndex === index;
+    if (recent) labels.push('최근 입력');
     return {
-      index, value, fixed, conflict, notes: cellNotes, label: labels.join(', '),
+      index, value, fixed, conflict, recent, notes: cellNotes, label: labels.join(', '),
       selected: selectedIndex === index,
       tabIndex: values !== null && status === 'playing' && focusIndex === index ? 0 : -1,
       disabled: values === null || status !== 'playing',
@@ -92,6 +96,7 @@ export function renderBoard(root: HTMLElement, state: GameState): void {
     button.classList.toggle('is-empty', model.value === 0);
     button.classList.toggle('is-conflict', model.conflict);
     button.classList.toggle('is-selected', model.selected);
+    button.classList.toggle('is-last-input', model.recent);
     button.classList.toggle('box-right', model.boxRight);
     button.classList.toggle('box-bottom', model.boxBottom);
     button.tabIndex = model.tabIndex;
