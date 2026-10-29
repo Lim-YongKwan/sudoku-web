@@ -32,6 +32,10 @@
           <p class="elapsed">경과 시간 <span data-elapsed role="timer" aria-live="off">00:00</span></p>
         </div>
         <p id="difficulty-help" class="board-help">간이 난이도는 빈칸 수 기준입니다. 선택은 새 게임부터 적용됩니다.</p>
+        <div class="assistance-options" role="group" aria-label="보조 옵션">
+          <label><input type="checkbox" data-show-digit-stock aria-describedby="digit-stock-help" disabled> 숫자 스톡 표시</label>
+          <p id="digit-stock-help" class="board-help" data-stock-help hidden>버튼 아래는 남은 스톡/9입니다. 고정 단서와 입력을 세며 메모는 제외합니다. 회색은 9개 이상 사용했다는 뜻이며 정답 여부와 관계없이 추가 입력할 수 있습니다.</p>
+        </div>
         <p id="board-help" class="board-help">칸을 선택한 뒤 1~9로 입력하세요. 방향키로 이동하고 Backspace·Delete로 지울 수 있습니다.</p>
         <p id="module-status" class="status-message" role="status" aria-live="polite" data-state="loading">퍼즐을 준비하고 있습니다.</p>
         <div id="sudoku-board" data-game-board role="group" aria-label="스도쿠 9행 9열 보드" aria-describedby="board-help"></div>

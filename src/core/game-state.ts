@@ -11,6 +11,7 @@ export function createInitialState(): GameState {
     selectedIndex: null, noteMode: false, selectedDifficulty: 'easy',
     activeDifficulty: null, requestId: 0, timer: emptyTimer(),
     completionDialogOpen: false, error: null,
+    assistance: { showDigitStock: false, highlightMatchingDigits: false },
   };
 }
 
@@ -29,6 +30,11 @@ function time(value: number): void {
 function validateAction(action: Action): void {
   if (!action || typeof action.type !== 'string') throw new TypeError('Action type is required.');
   switch (action.type) {
+    case 'SET_ASSISTANCE':
+      if (!['showDigitStock', 'highlightMatchingDigits'].includes(action.option) || typeof action.enabled !== 'boolean') {
+        throw new TypeError('Assistance requires a known option and boolean enabled.');
+      }
+      break;
     case 'SET_DIFFICULTY': difficulty(action.difficulty); break;
     case 'NEW_GAME_REQUESTED':
       integer(action.requestId, 'requestId', Number.MAX_SAFE_INTEGER); difficulty(action.difficulty); break;
@@ -90,6 +96,10 @@ export function reduceGame(state: GameState, action: Action): GameState {
   }
   if (state.status !== 'playing') return state;
   if (!state.puzzle || !state.values) throw new TypeError('Playing state requires puzzle and values.');
+  if (action.type === 'SET_ASSISTANCE') {
+    return state.assistance[action.option] === action.enabled ? state
+      : { ...state, assistance: { ...state.assistance, [action.option]: action.enabled } };
+  }
   if (action.type === 'SELECT_CELL') return state.selectedIndex === action.index ? state : { ...state, selectedIndex: action.index };
   if (action.type === 'MOVE_SELECTION') {
     if (state.selectedIndex === null) return { ...state, selectedIndex: state.puzzle.indexOf(0) };
@@ -123,6 +133,10 @@ export function reduceGame(state: GameState, action: Action): GameState {
 /** getState returns a read-only view by contract; subscribers must never mutate it. */
 export function createGameStore(initialState: GameState = createInitialState()): GameStore {
   if (!initialState || !Array.isArray(initialState.notes) || initialState.notes.length !== 81) throw new TypeError('Invalid initial state.');
+  if (!initialState.assistance || typeof initialState.assistance.showDigitStock !== 'boolean'
+    || typeof initialState.assistance.highlightMatchingDigits !== 'boolean') {
+    throw new TypeError('Initial assistance requires two booleans.');
+  }
   for (let index = 0; index < 81; index++) {
     const notes = initialState.notes[index];
     if (!Object.hasOwn(initialState.notes, index) || !(notes instanceof Set)) throw new TypeError('Initial notes must be dense Sets.');
@@ -133,7 +147,7 @@ export function createGameStore(initialState: GameState = createInitialState()):
   if (initialState.puzzle !== null) assertBoard(initialState.puzzle);
   if (initialState.values !== null) assertBoard(initialState.values);
   let state: GameState = {
-    ...initialState, puzzle: initialState.puzzle?.slice() ?? null, values: initialState.values?.slice() ?? null,
+    ...initialState, assistance: { ...initialState.assistance }, puzzle: initialState.puzzle?.slice() ?? null, values: initialState.values?.slice() ?? null,
     notes: initialState.notes.map((notes) => new Set(notes)), timer: { ...initialState.timer },
     error: initialState.error ? { ...initialState.error } : null,
   };

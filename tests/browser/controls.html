@@ -31,6 +31,10 @@
     <input id="outside-text" type="text" placeholder="숫자·삭제·방향키를 입력하세요">
     <label for="outside-select">외부 선택</label>
     <select id="outside-select"><option>첫 번째</option><option>두 번째</option></select>
+        <div class="assistance-options" role="group" aria-label="보조 옵션">
+          <label><input type="checkbox" data-show-digit-stock aria-describedby="digit-stock-help" disabled> 숫자 스톡 표시</label>
+          <p id="digit-stock-help" class="board-help" data-stock-help hidden>버튼 아래는 남은 스톡/9입니다. 고정 단서와 입력을 세며 메모는 제외합니다. 회색은 9개 이상 사용했다는 뜻이며 정답 여부와 관계없이 추가 입력할 수 있습니다.</p>
+        </div>
     <p id="interaction-status" class="status-message" role="status"></p>
     <div id="controls-board" role="group" aria-label="입력 검증용 스도쿠"></div>
     <p class="conflict-message" data-conflicts role="status" aria-live="polite"></p>

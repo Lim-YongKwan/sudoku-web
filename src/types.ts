@@ -29,15 +29,21 @@ export type GenerateResult =
   | { status: 'aborted'; stats: GenerationStats };
 export type Generate = (difficulty: Difficulty, options?: GenerateOptions) => Promise<GenerateResult>;
 export interface Timer { readonly startedAtMs: number | null; readonly stoppedAtMs: number | null }
+export interface Assistance {
+  readonly showDigitStock: boolean;
+  readonly highlightMatchingDigits: boolean;
+}
 export interface GameState {
   readonly status: 'idle' | 'generating' | 'playing' | 'completed' | 'error';
   readonly puzzle: Board | null; readonly values: Board | null;
   readonly notes: readonly ReadonlySet<number>[]; readonly selectedIndex: number | null;
+  readonly assistance: Assistance;
   readonly noteMode: boolean; readonly selectedDifficulty: Difficulty; readonly activeDifficulty: Difficulty | null;
   readonly requestId: number; readonly timer: Timer; readonly completionDialogOpen: boolean;
   readonly error: { readonly code: string; readonly message: string } | null;
 }
 export type Action =
+  | { type: 'SET_ASSISTANCE'; option: keyof Assistance; enabled: boolean }
   | { type: 'SET_DIFFICULTY'; difficulty: Difficulty }
   | { type: 'NEW_GAME_REQUESTED'; requestId: number; difficulty: Difficulty }
   | { type: 'GENERATION_SUCCEEDED'; requestId: number; difficulty: Difficulty; puzzle: Board; nowMs: number }

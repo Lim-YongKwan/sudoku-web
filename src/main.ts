@@ -27,6 +27,7 @@ export function createDisplayState(puzzle: Board | null = null): GameState {
     noteMode: false, selectedDifficulty: 'easy', activeDifficulty: 'easy',
     requestId: 1, timer: { startedAtMs: null, stoppedAtMs: null },
     completionDialogOpen: false, error: null,
+    assistance: { showDigitStock: false, highlightMatchingDigits: false },
   };
 }
 

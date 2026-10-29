@@ -109,3 +109,9 @@ h2 { font-size: 1.1rem; margin: 0; }
 dialog { width:min(26rem, calc(100% - 2rem)); box-sizing:border-box; border:1px solid #8a9d80; border-radius:1rem; padding:1.5rem; color:#254338; background:#fffef9; overflow-wrap:anywhere; }
 dialog::backdrop { background:rgb(20 35 25 / .55); }
 dialog h2 { margin-top:0; font-size:1.3rem; }
+.assistance-options { margin: .75rem 0; }
+.assistance-options label { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; cursor: pointer; font-size: .85rem; }
+.assistance-options input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: #31583b; }
+.assistance-options input:focus-visible { outline: 3px solid #bd651e; outline-offset: 3px; }
+.number-pad button.is-stock-exhausted { background: #e1e3e6; color: #42494f; border-color: #869098; }
+.number-pad button[data-stock-remaining]::after { content: attr(data-stock-remaining) "/9"; display: block; font-family: system-ui, sans-serif; font-size: .6rem; font-weight: 500; line-height: 1.3; }
