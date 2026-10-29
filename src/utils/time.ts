@@ -1,9 +1,10 @@
-function finite(value, name) {
+import type { Timer } from '../types.js';
+function finite(value: number, name: string): void {
   if (typeof value !== 'number') throw new TypeError(name + ' must be a number.');
   if (!Number.isFinite(value) || value < 0) throw new RangeError(name + ' must be finite and nonnegative.');
 }
 
-export function getElapsedSeconds(timer, nowMs) {
+export function getElapsedSeconds(timer: Timer, nowMs: number): number {
   finite(nowMs, 'nowMs');
   if (timer.startedAtMs === null) return 0;
   finite(timer.startedAtMs, 'startedAtMs');
@@ -12,7 +13,7 @@ export function getElapsedSeconds(timer, nowMs) {
   return Math.floor(Math.max(0, end - timer.startedAtMs) / 1000);
 }
 
-export function formatElapsed(seconds) {
+export function formatElapsed(seconds: number): string {
   finite(seconds, 'seconds');
   if (!Number.isSafeInteger(seconds)) throw new RangeError('seconds must be a safe integer.');
   return String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0');

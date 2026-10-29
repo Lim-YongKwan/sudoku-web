@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createInitialState, reduceGame, createGameStore } from '../src/core/game-state.js';
-import { findConflicts } from '../src/core/board.js';
+import { createInitialState, reduceGame, createGameStore } from '../.build/src/core/game-state.js';
+import { findConflicts } from '../.build/src/core/board.js';
 import { uniqueSolution, completedWithChangedClue } from './fixtures/boards.js';
 
 const puzzle = Object.freeze(uniqueSolution.map((n, i) => i < 35 ? 0 : n));
@@ -178,4 +178,28 @@ test('store rejects sparse, non-Set and out-of-range initial notes', () => {
   for (const notes of [Array(81), Array.from({ length: 81 }, () => []), Array.from({ length: 81 }, () => new Set([10]))]) {
     assert.throws(() => createGameStore({ ...createInitialState(), notes }), TypeError);
   }
+});
+test('store rejects falsy malformed actions and remains usable after validation failure', () => {
+  const store = createGameStore();
+  const before = store.getState();
+  for (const input of [undefined, null, false, 0, '']) {
+    assert.throws(() => store.dispatch(input), TypeError);
+    assert.equal(store.getState(), before);
+  }
+  store.dispatch({ type: 'SET_DIFFICULTY', difficulty: 'hard' });
+  assert.equal(store.getState().selectedDifficulty, 'hard');
+});
+
+test('malformed reentrant actions throw and clear queued actions instead of silently breaking', () => {
+  const store = createGameStore(playing());
+  const unbind = store.subscribe(() => {
+    store.dispatch(undefined);
+    store.dispatch({ type: 'SET_DIFFICULTY', difficulty: 'hard' });
+  });
+  assert.throws(() => store.dispatch({ type: 'SELECT_CELL', index: 1 }), TypeError);
+  unbind();
+  assert.equal(store.getState().selectedDifficulty, 'easy');
+  store.dispatch({ type: 'SELECT_CELL', index: 2 });
+  assert.equal(store.getState().selectedIndex, 2);
+  assert.equal(store.getState().selectedDifficulty, 'easy');
 });

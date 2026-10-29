@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { keyAction, bindInput } from '../src/ui/events.js';
+import { keyAction, bindInput } from '../.build/src/ui/events.js';
 
 test('board keyboard policy maps arrows, digits and deletion without intercepting Tab', () => {
   assert.deepEqual(keyAction({ key: 'ArrowLeft' }, true), { type: 'MOVE_SELECTION', direction: 'left' });

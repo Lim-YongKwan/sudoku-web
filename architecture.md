@@ -1,26 +1,26 @@
 # 스도쿠 프로젝트 아키텍처
 
-- 마지막 갱신: 2026-10-26
-- 현재 단계: 001~005 완료·각05 초안 작성. 06은 기존 자동/통합 검증과2026-10-26 사용자 잔여 확인으로 인수 완료.
+- 마지막 갱신: 2026-10-29
+- 현재 단계: 001~006 완료. 007 TypeScript 전환 04 리뷰·수정과 사용자 로컬 검증 확인, 깨끗한 checkout 재현 완료·Actions 공개 배포 대기.
 - DOM 독립 엔진은 구현됐다. 003 보드 표시·엔진 초기 생성 연결을 구현했다. 004 상태 store·입력·완료 상태를 구현하고 04 리뷰·수정을 수행했다. 004 필수 UI·터치는 사용자 확인으로 충족했고 005 게임 제어·시간 표시·dialog를 구현했으며 04 리뷰·수정과 사용자 잔여 검증 후005를 완료했다. 환경 검증은 [001 기록](docs/review-001.md), 엔진 구현·측정은 [002 기록](docs/engine-002.md)을 따른다.
 
 ## 현재 코드와 책임
 
 | 파일 | 실제 구현 |
 |---|---|
-| [package.json](package.json) | Native ESM, Node >=22, prestart/start·pretest/test. 외부 의존성 없음 |
+| [package.json](package.json) | Native ESM, Node >=22, TypeScript 7.0.2 개발 의존성·타입/빌드/prestart/pretest. 게임 런타임 의존성 없음 |
 | [scripts/check-runtime.mjs](scripts/check-runtime.mjs) | 지원 Node 버전 검사. prehook과 CLI에서 사용 |
 | [scripts/static-server.mjs](scripts/static-server.mjs) | createStaticServer·startServer·closeServer·parsePort, 정적 파일과 루트 경계 |
 | [scripts/serve.mjs](scripts/serve.mjs) | CLI·실제 주소/PID·PORT·중복 종료 방지·시작 후 오류 정리·소유 부모 IPC 종료 |
 | [index.html](index.html) | 보드·입력 도구·난이도·새 게임·타이머·native dialog·상태와 ESM 진입점 |
-| [src/main.js](src/main.js) | mountGame으로 생성 Action·store·입력·렌더·완료·정리·캐시 복귀 연결 |
+| [src/main.ts](src/main.ts) | mountGame으로 생성 Action·store·입력·렌더·완료·정리·캐시 복귀 연결 |
 | [styles/main.css](styles/main.css) | 9열 Grid·3x3 경계·단서/빈칸·포커스·반응형 보드 스타일 |
 | [tests/server.test.js](tests/server.test.js) | 실제 HTTP·MIME·파일 경계·종료·포트·설정의 내장 테스트 |
 | [.gitignore](.gitignore) | 향후 node_modules·coverage·로그·실제 환경값 제외 |
-| [src/core/board.js](src/core/board.js) | 보드 형식·모든 충돌 인덱스·유효성·단서 보존 완료 판정 |
-| [src/core/solver.js](src/core/solver.js) | MRV 백트래킹 풀이·최대 2개 해답 수 검사, 비동기 제한·취소 |
-| [src/core/generator.js](src/core/generator.js) | 완성 보드 생성·유일해 제거·3난이도 목표·전체 예산 |
-| [src/utils/search-runtime.js](src/utils/search-runtime.js) | 옵션·단조 시계·난수·task 양보·탐색 노드·전체 공유 예산 |
+| [src/core/board.ts](src/core/board.ts) | 보드 형식·모든 충돌 인덱스·유효성·단서 보존 완료 판정 |
+| [src/core/solver.ts](src/core/solver.ts) | MRV 백트래킹 풀이·최대 2개 해답 수 검사, 비동기 제한·취소 |
+| [src/core/generator.ts](src/core/generator.ts) | 완성 보드 생성·유일해 제거·3난이도 목표·전체 예산 |
+| [src/utils/search-runtime.ts](src/utils/search-runtime.ts) | 옵션·단조 시계·난수·task 양보·탐색 노드·전체 공유 예산 |
 | [tests/fixtures/boards.js](tests/fixtures/boards.js) | 유일해·충돌·복수해·확정 무해답·단서 변경 fixture, seed 난수 |
 | [tests/board.test.js](tests/board.test.js) | 형식·행/열/박스 충돌·완료·단서 검사 |
 | [tests/solver.test.js](tests/solver.test.js) | 탐색 결과 구분·불변·불완전 count·취소·예산·재현성 |
@@ -28,8 +28,8 @@
 
 ## HTTP 처리 흐름
 
-1. npm start가 Node runtime을 검사한 뒤 CLI를 시작한다.
-2. CLI는 재사용 서버 모듈을 호출해 127.0.0.1의 지정 포트에 바인딩한다.
+1. npm start의 prestart가 Node runtime 검사·TypeScript 컴파일·.build 정적 준비를 마친 뒤 CLI를 시작한다.
+2. CLI는 .build를 기본 루트로 사용하고 127.0.0.1의 지정 포트에 바인딩한다.
 3. GET/HEAD 요청의 원시 경로를 먼저 검사하고 인코딩을 해제한다.
 4. traversal·제어문자·Windows 경로·숨김 경로와 비공개 경로를 거부한다.
 5. 지원 MIME을 확인하고 resolve와 realpath 기준으로 루트 경계·실제 공개 경로·숨김 경로를 검사한다.
@@ -85,7 +85,7 @@
 
 ## 003 보드 표시 구조·검증
 
-- [src/ui/board.js](src/ui/board.js)는 getCellModels로 표시를 계산하고 renderBoard로 81개 button을 유지·갱신한다. 상태·배열·Set을 변경하거나 이벤트를 등록하지 않는다.
+- [src/ui/board.ts](src/ui/board.ts)는 getCellModels로 표시를 계산하고 renderBoard로 81개 button을 유지·갱신한다. 상태·배열·Set을 변경하거나 이벤트를 등록하지 않는다.
 - [tests/browser/board.html](tests/browser/board.html)과 [board-checks.js](tests/browser/board-checks.js)는 앱과 분리된 고정 fixture·노드/포커스/불변·실패 주입 검증 페이지다.
 - [tests/board-rendering.test.js](tests/board-rendering.test.js)의 9개 표시/검증보조/수명주기 검사와 새 자산 HTTP 검사를 추가했다.
 - main → generatePuzzle(easy) → 표시용 snapshot → renderBoard → DOM 흐름이다. 실패에는 가짜 퍼즐을 보여주지 않는다.
@@ -98,8 +98,8 @@
 
 ## 004 상태·입력 구조 — 03
 
-- [game-state.js](src/core/game-state.js)는 순수 reducer·초기 상태·store·구독 정리·재진입 dispatch 큐를 제공한다. getState는 계약상 읽기 전용이다.
-- [events.js](src/ui/events.js)는 bindInput의 위임 click·keydown으로 마우스/터치 click·보드 키·숫자 패드·삭제·메모를 Action으로 전달하고 정리한다.
+- [game-state.ts](src/core/game-state.ts)는 순수 reducer·초기 상태·store·구독 정리·재진입 dispatch 큐를 제공한다. getState는 계약상 읽기 전용이다.
+- [events.ts](src/ui/events.ts)는 bindInput의 위임 click·keydown으로 마우스/터치 click·보드 키·숫자 패드·삭제·메모를 Action으로 전달하고 정리한다.
 - 흐름: 입력 이벤트 → dispatch → reducer/store → 구독 렌더 → DOM. main은 숫자/삭제 후 유효 완성을 검사해 GAME_COMPLETED를 dispatch한다.
 - renderer는 노드·포커스 표시를 재사용하고 입력 이벤트 쪽에서 선택 셀의 실제 focus를 맞춘다. 오류는 findConflicts와 !·테두리·이름·공용 상태 안내다.
 - [interaction.html](tests/browser/interaction.html)·[interaction-checks.js](tests/browser/interaction-checks.js)는 일반·완료 직전·실패 store와 외부 form 검증용이다.
@@ -110,10 +110,10 @@
 004의 04에서 키 입력을 실제 포커스 셀에 맞추고 초기 메모 계약·input binding 정리 소유권을 보완했다. 브라우저/터치 재시도·사용자 최종 확인·증거 한계는 [004 리뷰 기록](docs/review-004.md)을 따른다.
 ## 005 게임 제어·시간·완료 — 03 구현
 
-- [main.js](src/main.js)의 createGameSession은 store·generate·단조 시계·scheduler를 조정한다. 새 요청은 이전 controller·tick을 정리하고 requestId/상태/요청 난이도를 확인한 결과만 수락한다.
+- [main.ts](src/main.ts)의 createGameSession은 store·generate·단조 시계·scheduler를 조정한다. 새 요청은 이전 controller·tick을 정리하고 requestId/상태/요청 난이도를 확인한 결과만 수락한다.
 - 선택 난이도는 다음 게임에 적용한다. 생성 중 보드·입력 도구는 잠그고 새 게임 재요청은 허용한다. 실패는 이전 보드를 비우고 재시도 안내로 표시한다.
-- [time.js](src/utils/time.js)는 시각 차이의 초 내림·mm:ss를 계산한다. playing 동안250ms interval 하나를 유지하고 새 게임·완료·dispose 시 정리한다. visibilitychange에서 표시를 즉시 보정한다.
-- [controls.js](src/ui/controls.js)는 난이도·새 게임·시간·native dialog를 렌더하고 이벤트를 정리한다. 완료 시 닫기에 포커스, 닫기·Escape 후 새 게임에 포커스를 복귀한다.
+- [time.ts](src/utils/time.ts)는 시각 차이의 초 내림·mm:ss를 계산한다. playing 동안250ms interval 하나를 유지하고 새 게임·완료·dispose 시 정리한다. visibilitychange에서 표시를 즉시 보정한다.
+- [controls.ts](src/ui/controls.ts)는 난이도·새 게임·시간·native dialog를 렌더하고 이벤트를 정리한다. 완료 시 닫기에 포커스, 닫기·Escape 후 새 게임에 포커스를 복귀한다.
 - [controls.html](tests/browser/controls.html)·[controls-checks.js](tests/browser/controls-checks.js)는 실제 seed 생성·완료 직전·첫 실패·지연/오래된 응답 전달 개발 fixture다. 프로덕션에 fixture 버튼은 없다.
 - [시간 검사](tests/time.test.js)·[제어 검사](tests/game-controls.test.js), HTTP 자산 회귀를 추가했다. 도구의 실제 UI 관찰은03 타임아웃·04 URL 확인 실패로 중단됐다. 이후 사용자 안내 절차의 타이머·dialog·포커스·터치·반응형 확인 보고로 필수 UI 조건을 충족했다.
 - 상세 근거·수동 절차: [005 구현 기록](docs/controls-005.md). 004 완료 근거는 [004 리뷰](docs/review-004.md)·[05 초안](docs/pr-drafts/task-004.md)이다.
@@ -136,10 +136,32 @@ D-001의 오래된 현재 적용 범위·작업 상태 메타데이터를001 문
 GitHub Pages를 main/(root)로 설정해기존 HTML·CSS·Native ESM 게임을 공개했다. 별도런타임서버·번들러·외부패키지는추가하지 않았다.
 공개주소는 [스도쿠 게임](https://lim-yongkwan.github.io/sudoku-web/)이다. [배포40294007460](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40294007460)은 success이며GitHub설정의게시완료·HTTPS를확인했다.
 도구의 직접 플레이/HTTP 검증은 접속 승인 거부로 미실행이었으나, 이후 사용자 보드·입력·새 게임·타이머 정상 보고로 배포 기능 확인을 마쳤다. [006 작업기록](tasks/006-github-pages-deployment.md)에 배포 성공·당시 검증 차단·사용자 확인 후 완료를 구분했다. 기존06인수완료는유지한다.
-## 후속 설계 계획 — 미반영, 2026-10-28
 
-이 문서의 현재 구조는 JavaScript Native ESM 구현을 설명한다.
-[007~013 공통 계획](docs/plans/sudoku-next-iteration.md)에 TypeScript 전환·보조 표시·숫자 실행 취소·수동 저장의 예정 계약을 분리했다.
-[AGENTS 수정안](docs/plans/agents-typescript-proposal.md)과 [설계 결정 목록](docs/decisions/README.md)을 참고한다.
-007~013은 모두 예정 상태다. 타입 원본·출력 폴더·새 상태 필드·저장 기능은 현재 구조에 반영된 것으로 취급하지 않는다.
-각 작업의 실제 구현·검증 후 해당 범위와 현재 실행 방식을 갱신한다.
+## 007 TypeScript 전환 — 부분 반영
+
+원본 모듈은 .ts로 전환했고 [types.ts](src/types.ts)에 읽기 전용 보드/상태·Action 판별 유니온·생성 결과·주입/구독 계약을 정의했다. 데이터의 런타임 검증은 유지한다.
+[tsconfig](tsconfig.json)는 strict·noEmitOnError·NodeNext·ES2022다. 브라우저에는 .js ESM만 제공한다.
+[build.mjs](scripts/build.mjs)가 고정된 출력 폴더를 정리한 후 컴파일·정적 복사를 수행하며 실패하면 부분 출력을 제거한다.
+개발 .build는 src·index.html·styles·개발 fixture, 배포 dist는 src·index.html·styles만 포함한다. 서버와 기존 단위 검사는 최신 개발 출력을 사용한다.
+[build.test.js](tests/build.test.js)는 실제 컴파일러로 타입 오류·오래된 출력·정적 자산 누락·배포 경계를 검사한다.
+[Pages workflow](.github/workflows/pages.yml)는 PR 검증과 main의 검증 후 dist 배포를 정의한다. 원격 Pages 소스는 아직 main/(root)이며 이 workflow를 실제 실행하지 않았다.
+[D-004](docs/decisions/004-typescript-toolchain.md)의 원본·도구·로컬 출력은 반영했다. 원격 배포 전환 전까지 D-001은 채택됨을 유지한다.
+97개 중 96 통과·0 실패·1 Windows 권한 skip. 브라우저 접속은 시간 초과로 미완료다. [007 기록](docs/typescript-007.md)에 근거와 남은 절차를 둔다.
+008~013의 보조 표시·취소·저장 계약은 [후속 계획](docs/plans/sudoku-next-iteration.md)에 분리하며 아직 구현하지 않았다.
+
+## 007의 04 수정
+
+상태 store는 undefined/falsy Action을 조용히 버리지 않고 런타임 검증 오류로 처리하며 재진입 큐를 정리한다.
+solver의 숫자 마스크는 number 배열로 타입을 명시한다.
+Pages workflow는 workflow/ref별 전체 실행의 concurrency와 이전 실행 취소를 적용한다. 배포 job만 직렬화하던 구성을 제거했다.
+[04 기록](docs/review-007.md)의 최신 결과는 99개 중 98 통과·0 실패·1 권한 skip이다. 실제 UI·원격 배포 전환은 여전히 미검증이다.
+
+## 007 사용자 잔여 확인 — 2026-10-29
+
+사용자가 99개 전체 통과·로컬 브라우저·터치 에뮬레이션·반응형·완료 dialog·콘솔·서버 종료를 확인했다. 이전 도구 관찰과 구분한다.
+현재 원격 사이트는 이전 배포다. 고정 커밋의 깨끗한 checkout·실제 Actions/공개 배포가 남아 있으며 D-001 전체 대체는 아직 보류한다. [순서와 증거](docs/review-007.md)를 따른다.
+
+## 007 checkout 재현 — 2026-10-29
+
+e7624b6의 새 worktree에서 설치·타입/빌드·HTTP/종료와 전 회귀(98 통과·0 실패·1 권한 skip)를 재현했다. [기록](docs/checkout-007.md)을 따른다.
+후속 문서 갱신은 코드 구조를 바꾸지 않는다. 실제 원격 배포 소스와 D-001 전체 대체 보류는 유지한다.

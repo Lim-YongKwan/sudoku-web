@@ -206,10 +206,12 @@ test('the actual project page points to real CSS and ESM assets', async () => {
     assert.ok(js.body.trim().length > 0);
     const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
     assert.equal(pkg.type, 'module');
-    assert.equal(pkg.scripts.test, 'node --test');
+    assert.equal(pkg.scripts.test, 'node --test tests/*.test.js');
+    assert.equal(pkg.scripts.pretest, 'node scripts/build.mjs development');
     assert.equal(pkg.scripts.start, 'node scripts/serve.mjs');
     assert.equal(Object.keys(pkg.dependencies ?? {}).length, 0);
-    assert.equal(Object.keys(pkg.devDependencies ?? {}).length, 0);
+    assert.deepEqual(Object.keys(pkg.devDependencies ?? {}), ['typescript']);
+    assert.match(pkg.devDependencies.typescript, /^\d+\.\d+\.\d+$/);
   } finally {
     await closeServer(actual);
   }

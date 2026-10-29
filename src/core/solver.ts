@@ -1,25 +1,26 @@
+import type { Board, SearchOptions, SharedBudget, SearchResult, SearchStatus, SolveResult, CountResult } from '../types.js';
 import { assertBoard, isValidBoard } from './board.js';
 import { searchRuntime, shuffled } from '../utils/search-runtime.js';
 
 const ALL = 0b1111111110;
-const boxOf = (row, col) => Math.floor(row / 3) * 3 + Math.floor(col / 3);
+const boxOf = (row: number, col: number) => Math.floor(row / 3) * 3 + Math.floor(col / 3);
 
 /** Internal entry for generator budget sharing. Public callers use the two wrappers below. */
-export async function runSearch(input, options, shared, counting) {
+export async function runSearch(input: Board, options: SearchOptions, shared: SharedBudget | undefined, counting: boolean): Promise<SearchResult> {
   assertBoard(input);
   const runtime = searchRuntime(options, shared);
   if (counting && (options.limit === undefined ? 2 : options.limit) !== 2) throw new RangeError('limit must be 2.');
   const board = input.slice();
   let count = 0;
-  let solution = null;
+  let solution: number[] | null = null;
   let reason = runtime.check();
-  const result = (status) => ({ status, count, board: solution, stats: runtime.stats(), reason });
+  const result = (status: SearchStatus): SearchResult => ({ status, count, board: solution, stats: runtime.stats(), reason });
   if (reason) return result(reason === 'aborted' ? 'aborted' : 'budget-exceeded');
   if (!isValidBoard(board)) return result('invalid');
 
-  const rows = Array(9).fill(0);
-  const cols = Array(9).fill(0);
-  const boxes = Array(9).fill(0);
+  const rows = Array<number>(9).fill(0);
+  const cols = Array<number>(9).fill(0);
+  const boxes = Array<number>(9).fill(0);
   board.forEach((digit, index) => {
     if (!digit) return;
     const row = Math.floor(index / 9), col = index % 9;
@@ -31,7 +32,8 @@ export async function runSearch(input, options, shared, counting) {
   async function visit() {
     reason = await runtime.enter();
     if (reason) return true;
-    let selected = -1, candidates = [], smallest = 10;
+    let selected = -1, smallest = 10;
+    let candidates: number[] = [];
     for (let index = 0; index < 81; index++) {
       if (board[index] !== 0) continue;
       const row = Math.floor(index / 9), col = index % 9;
@@ -72,12 +74,15 @@ export async function runSearch(input, options, shared, counting) {
   return result(counting ? (count === 2 ? 'limit-reached' : 'complete') : (count ? 'solved' : 'unsolvable'));
 }
 
-export async function solveBoard(board, options = {}) {
+export async function solveBoard(board: Board, options: SearchOptions = {}): Promise<SolveResult> {
   const result = await runSearch(board, options, undefined, false);
-  return { status: result.status, board: result.board, stats: result.stats };
+  if (result.status === 'solved' && result.board) return { status: 'solved', board: result.board, stats: result.stats };
+  if (result.status === 'complete' || result.status === 'limit-reached' || result.status === 'solved') throw new Error('Unexpected solve result.');
+  return { status: result.status, board: null, stats: result.stats };
 }
 
-export async function countSolutions(board, options = {}) {
+export async function countSolutions(board: Board, options: SearchOptions = {}): Promise<CountResult> {
   const result = await runSearch(board, options, undefined, true);
+  if (result.status === 'solved' || result.status === 'unsolvable') throw new Error('Unexpected counting result.');
   return { status: result.status, count: result.count, stats: result.stats };
 }

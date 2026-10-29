@@ -1,10 +1,11 @@
+import type { Difficulty, GenerateOptions, GenerateResult, StopReason } from '../types.js';
 import { isComplete } from './board.js';
 import { runSearch } from './solver.js';
 import { hooks, monotonicClock, optionObject, positive, shuffled, yieldTask } from '../utils/search-runtime.js';
 
 export const DIFFICULTY_BLANKS = Object.freeze({ easy: 35, normal: 45, hard: 50 });
 
-export async function generatePuzzle(difficulty, options = {}) {
+export async function generatePuzzle(difficulty: Difficulty, options: GenerateOptions = {}): Promise<GenerateResult> {
   if (typeof difficulty !== 'string' || !Object.hasOwn(DIFFICULTY_BLANKS, difficulty)) throw new RangeError('Unknown difficulty.');
   optionObject(options);
   const injected = hooks(options);
@@ -19,7 +20,7 @@ export async function generatePuzzle(difficulty, options = {}) {
   const shared = { now, startedAt, maxElapsedMs, maxNodes: maxTotalNodes, nodes: 0 };
   let attempts = 0, elapsedMs = 0;
 
-  function stopReason() {
+  function stopReason(): StopReason | null {
     elapsedMs = now() - startedAt;
     if (injected.signal?.aborted) return 'aborted';
     if (elapsedMs >= maxElapsedMs) return 'time-budget';
@@ -27,7 +28,7 @@ export async function generatePuzzle(difficulty, options = {}) {
     return null;
   }
   const stats = () => ({ attempts, totalNodes: shared.nodes, elapsedMs });
-  const failure = (reason) => reason === 'aborted'
+  const failure = (reason: StopReason | 'attempts-exhausted'): GenerateResult => reason === 'aborted'
     ? { status: 'aborted', stats: stats() }
     : { status: 'failed', reason, stats: stats() };
   async function boundary() {
@@ -52,7 +53,7 @@ export async function generatePuzzle(difficulty, options = {}) {
     const completed = await runSearch(Array(81).fill(0), searchOptions(), shared, false);
     reason = stopReason();
     if (reason) return failure(reason);
-    if (completed.status !== 'solved') continue;
+    if (completed.status !== 'solved' || completed.board === null) continue;
     const solution = completed.board;
     const puzzle = solution.slice();
     let blankCount = 0;

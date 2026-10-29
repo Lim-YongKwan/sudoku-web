@@ -11,10 +11,10 @@
 
 | 파일 | 동작 |
 |---|---|
-| [board.js](../src/core/board.js) | dense Board 형식, 0 제외 모든 충돌, 유효성, 원본 단서 보존 완료 판정 |
-| [solver.js](../src/core/solver.js) | MRV·비트 마스크 백트래킹, Promise 풀이·해답 수, 입력 복사 |
-| [generator.js](../src/core/generator.js) | 완성 보드·Fisher–Yates 제거, 유일해·목표 빈칸, 전체/개별 제한 |
-| [search-runtime.js](../src/utils/search-runtime.js) | 범위·시계·난수 검증, 노드 누계, 공유 전체 예산, 다음 task 양보 |
+| [board.js](../src/core/board.ts) | dense Board 형식, 0 제외 모든 충돌, 유효성, 원본 단서 보존 완료 판정 |
+| [solver.js](../src/core/solver.ts) | MRV·비트 마스크 백트래킹, Promise 풀이·해답 수, 입력 복사 |
+| [generator.js](../src/core/generator.ts) | 완성 보드·Fisher–Yates 제거, 유일해·목표 빈칸, 전체/개별 제한 |
+| [search-runtime.js](../src/utils/search-runtime.ts) | 범위·시계·난수 검증, 노드 누계, 공유 전체 예산, 다음 task 양보 |
 | [boards.js](../tests/fixtures/boards.js) | 계획 fixture와 seed 난수 |
 | [board 테스트](../tests/board.test.js) | 형식·충돌 전체·완료·단서 |
 | [solver 테스트](../tests/solver.test.js) | 정상·무해답·복수해·충돌·완성·불완전 탐색·취소·예산 |
@@ -118,3 +118,5 @@ Node 22 이상 프로젝트 루트에서 node --input-type=module을 실행한 �
 위 내용은 03 당시 이력이다. 이후 옵션 상속 속성의 취소·시계·양보 누락을 수정했고 개별 시간 제한·독립 기준 풀이 검증을 보강했다.
 최신 전체 검사는 43개 중 42 통과·0 실패·1 skip, 엔진 25개 모두 통과다. 기존 서버 코드는 무변경이므로 이번 17개 통과와 001의 링크 검사 사용자 증거를 함께 적용했다.
 002는 완료이며 상세 수정·seed 재측정·증거 구분·완료 판단은 [04 리뷰 기록](review-002.md)을 따른다. 다음은 05 초안 준비다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.

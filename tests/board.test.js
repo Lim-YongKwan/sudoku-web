@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assertBoard, findConflicts, isValidBoard, isComplete } from '../src/core/board.js';
+import { assertBoard, findConflicts, isValidBoard, isComplete } from '../.build/src/core/board.js';
 import { uniquePuzzle, uniqueSolution, conflictingPuzzle, completedWithChangedClue } from './fixtures/boards.js';
 
 test('board APIs reject malformed, sparse, coerced and non-integer boards', () => {

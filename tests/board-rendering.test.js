@@ -1,8 +1,8 @@
 import { layoutChecks, allChecksPass } from './browser/board-assertions.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getCellModels } from '../src/ui/board.js';
-import { createDisplayState, bindInitialBoardLifecycle } from '../src/main.js';
+import { getCellModels } from '../.build/src/ui/board.js';
+import { createDisplayState, bindInitialBoardLifecycle } from '../.build/src/main.js';
 import { uniquePuzzle, uniqueSolution } from './fixtures/boards.js';
 
 test('display state follows planned fields with independent puzzle, values and note sets', () => {

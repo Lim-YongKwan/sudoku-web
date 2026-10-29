@@ -1,15 +1,16 @@
-# Sudoku — 순수 JavaScript 학습 프로젝트
+# Sudoku — Vanilla TypeScript 학습 프로젝트
 
 ## 현재 상태
 
-001 실행·검증 환경은 **04 리뷰·사용자 잔여 검증을 거쳐 완료**됐다. 05 커밋 메시지·PR 초안도 작성했다. 정적 HTTP 서버와 Native ESM 시작 페이지를 구현했다.
-001·002는 완료됐고 003에서 실제 easy 퍼즐의 보드 표시를 연결했다. 004에서 숫자·메모·선택·삭제·완료 상태를 추가했다. 005에서 게임 제어·타이머 표시·완료 dialog를 연결했다. 005는04 리뷰·수정·사용자 잔여 검증 후 완료됐다. 003은 04 리뷰·수정 후 사용자 테스트·필수 브라우저 확인으로 완료됐다.
-코드 리뷰·수정 후 사용자가 테스트 18개 통과·브라우저 ESM 초기화·콘솔 오류 없음·서버 종료를 확인했다.
+001~006은 완료됐다. 현재 007에서 게임 원본을 strict TypeScript로 전환하고 컴파일·검증·배포 준비를 구현했다.
+007은 04 리뷰·수정과 사용자 로컬 재검증을 마쳤다. 99개 전체 통과·브라우저·터치 에뮬레이션·반응형·완료·콘솔·서버 종료를 확인했다. 커밋 e7624b6의 깨끗한 checkout 재현은 마쳤고 실제 Actions 공개 배포가 남아 있다.
+현재 공개 사이트는 기존 JavaScript 배포다. 이 브랜치의 구현은 e7624b6으로 로컬 커밋했으며 아직 push하지 않았다.
+[007 구현·검증 기록](docs/typescript-007.md)에 실제 결과와 남은 조건을 구분했다. 아래 이전 단계별 검증은 당시 이력이다.
 
 ## 실행 환경
 
-- Node.js 22 이상, npm. 외부 npm·CDN 패키지와 번들러는 사용하지 않는다.
-- 설치 명령은 필요하지 않다. package.json에는 외부 dependencies와 devDependencies가 없다.
+- Node.js 22 이상, npm. 게임 런타임 패키지·CDN·번들러는 사용하지 않는다.
+- npm ci로 고정된 TypeScript 7.0.2 개발 컴파일러를 설치한다. package-lock.json을 함께 사용한다. 게임 런타임 dependencies는 없다.
 - 시스템 기본 Node는 v16.20.2다. 기존 Codex 실행 환경의 Node v24.22.1과 npm 8.19.4로 실제 검사했다.
 - 시스템 설치와 전역 PATH는 변경하지 않았다. 새 터미널에서도 적절한 Node를 먼저 선택해야 한다.
 
@@ -20,7 +21,10 @@
 ```powershell
 node --version
 npm.cmd --version
+npm.cmd ci
+npm.cmd run typecheck
 npm.cmd test
+npm.cmd run build
 npm.cmd start
 ```
 
@@ -29,7 +33,7 @@ file://로 index.html을 열어 검증하지 않는다. 종료는 서버 터미�
 
 ### 이 컴퓨터의 기존 Node 24를 현재 PowerShell 세션에서 사용
 
-아래는 이번 검증에 사용한 설치본이다. 프로젝트의 외부 의존성은 아니며, 다른 컴퓨터에서는 설치된 Node 22 이상을 사용하면 된다.
+아래는 이번 검증에 사용한 설치본이다. 게임 런타임 의존성은 아니며, 다른 컴퓨터에서는 설치된 Node 22 이상을 사용하면 된다.
 
 ```powershell
 $nodeDirectory = Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin'
@@ -38,7 +42,10 @@ $npmEntry = Join-Path $env:ProgramFiles 'nodejs\node_modules\npm\bin\npm-cli.js'
 $env:Path = "$nodeDirectory;$env:Path"
 & $nodeExecutable --version
 & $nodeExecutable $npmEntry --version
+& $nodeExecutable $npmEntry ci
+& $nodeExecutable $npmEntry run typecheck
 & $nodeExecutable $npmEntry test
+& $nodeExecutable $npmEntry run build
 & $nodeExecutable $npmEntry start
 ```
 
@@ -59,7 +66,7 @@ PORT를 바꾸려면 시작 전에 `$env:PORT = '8082'`처럼 설정한다. 사�
 | 파일 | 책임 |
 |---|---|
 | [index.html](index.html) | 보드 마운트·상태·보기 전용 안내·CSS/ESM 진입점 |
-| [src/main.js](src/main.js) | 실제 easy 생성·표시 snapshot·렌더 연결·로딩/실패·pagehide 취소 |
+| [src/main.ts](src/main.ts) | 실제 easy 생성·표시 snapshot·렌더 연결·로딩/실패·pagehide 취소 |
 | [styles/main.css](styles/main.css) | 9열 보드·단서/빈칸·3x3 경계·포커스·반응형 |
 | [scripts/serve.mjs](scripts/serve.mjs) | CLI 시작·실제 주소/PID·중복 종료 방지·시작 후 오류 정리. 소유 부모 IPC 검증 지원 |
 | [scripts/static-server.mjs](scripts/static-server.mjs) | HTTP 생성·시작·종료와 파일 경계·MIME 처리 |
@@ -140,8 +147,33 @@ GitHub Pages를 main 브랜치의 / (root)에 연결했고 [빌드·배포 성�
 배포 기준은7189215다. 기본 도메인의 HTTPS로 제공한다. main에 후속 변경을 push하면 같은 소스에서 다시 배포된다.
 게임은 브라우저에서 실행되며 방문자는 Node.js를 설치하지 않는다.
 도구의 직접 접속은 승인 거부로 중단됐지만, 이후 사용자가 공개 주소의 보드·숫자 입력·새 게임·타이머 정상 동작을 확인해006을 완료했다. 상세 근거와 관찰 한계는 [006 배포 작업](tasks/006-github-pages-deployment.md)을 따른다.
-## 다음 개발 계획 — 007~013
+## 개발 계획 — 007~013
 
 [작업 목록](tasks/README.md)에 TypeScript 전환부터 수동 저장까지 일곱 개 예정 태스크를 추가했다.
 [확정 요구사항·공통 계약](docs/plans/sudoku-next-iteration.md), [AGENTS TypeScript 수정안](docs/plans/agents-typescript-proposal.md), [설계 결정](docs/decisions/README.md)을 함께 읽는다.
-이번에는 명세만 작성했다. 현재는 JavaScript 실행 방식이며 TypeScript 설치·빌드 명령·Pages 전환은 007 구현 이후 적용한다.
+007의 로컬 TypeScript 전환을 구현했다. 008~013은 예정 상태다. Pages 원격 전환은 아직 하지 않았으며 007 기록의 배포 순서를 따른다.
+
+## 007 원본·출력과 배포
+
+- 원본: src/**/*.ts. 브라우저의 .js 상대 import를 유지한다.
+- npm run build:dev → .build에 컴파일된 src와 개발 정적 자산·fixture를 준비한다.
+- npm test와 npm start는 각각 pretest/prestart에서 최신 개발 출력을 만든다. 같은 출력을 만드는 명령을 동시에 실행하지 않는다.
+- npm run build → dist에 index.html·styles·컴파일된 src만 준비한다. 생성물은 Git에서 제외하고 직접 수정하지 않는다.
+- 서버 기본 루트는 .build다. 저장소 루트를 다른 서버로 직접 제공하거나 원본 index.html을 file://로 열지 않는다.
+- GitHub Actions 파일을 준비했으나 원격 설정은 기존 main/(root)다. main 반영 전에 Pages를 Actions로 전환한 뒤 실제 빌드·공개 사이트를 확인한다. TS 원본을 기존 루트 게시로 먼저 내보내지 않는다.
+
+## 007의 04 결과
+
+[리뷰·남은 확인](docs/review-007.md): Action 큐의 잘못된 입력 처리와 배포 실행 경합을 수정했다.
+최신 전체 검사는 99개 중 98 통과·0 실패·1 Windows 권한 skip이다.
+브라우저는 URL 확인 불가로 도구가 중단했으며 실제 DOM/터치 확인은 남아 있다. 현재 공개 사이트·원격 설정은 변경하지 않았다.
+
+## 007 사용자 확인 후 남은 순서
+
+2026-10-29 사용자 보고: 99 통과·0 실패·0 skip, 브라우저·터치 에뮬레이션·반응형·완료 dialog·콘솔·서버 종료 확인. 실제 휴대전화 검증으로 확대하지 않는다.
+[04 기록](docs/review-007.md)의 커밋 → 깨끗한 checkout → feature push/PR validate → Pages 소스 Actions 전환 → main 반영/배포 → 공개 주소 확인 순서를 따른다. 현재는 진행 중이며 이번 문서 갱신에서 커밋·push는 하지 않았다.
+
+## 007 커밋 기반 재현
+
+[검증 기록](docs/checkout-007.md): 새 worktree에서 설치·타입 검사·빌드·99개 검사(98 통과·0 실패·1 Windows 권한 skip)·서버 실행/HTTP/종료를 확인했다. 사용자 로컬 99개 전체 통과 보고와 별도로 기록했다.
+TS-02는 충족했고 원격 Actions/공개 배포는 대기 중이다. 이번 요청은 로컬 커밋·재현까지이며 push하지 않았다.

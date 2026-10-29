@@ -11,9 +11,9 @@
 
 | 파일 | 동작 |
 |---|---|
-| [main.js](../src/main.js) | DOM 없는 createGameSession으로 store·시계·생성·scheduler 효과 조정. mountGame에서 UI·visibility·정리 연결 |
-| [controls.js](../src/ui/controls.js) | 난이도·재시작·시간·현재 난이도·native dialog 렌더, change/click/cancel/close 정리 |
-| [time.js](../src/utils/time.js) | 유한 시각 검사·초 내림·완료 시각 고정·mm:ss, 100분 이상 표시 |
+| [main.js](../src/main.ts) | DOM 없는 createGameSession으로 store·시계·생성·scheduler 효과 조정. mountGame에서 UI·visibility·정리 연결 |
+| [controls.js](../src/ui/controls.ts) | 난이도·재시작·시간·현재 난이도·native dialog 렌더, change/click/cancel/close 정리 |
+| [time.js](../src/utils/time.ts) | 유한 시각 검사·초 내림·완료 시각 고정·mm:ss, 100분 이상 표시 |
 | [index.html](../index.html)·[CSS](../styles/main.css) | 다음 게임 난이도·새 게임·타이머·완료 제목/설명/닫기와 반응형 배치 |
 | [시간 검사](../tests/time.test.js)·[제어 검사](../tests/game-controls.test.js) | 시계 경계·요청 경합·실패·정리·완료 잠금·컨트롤 이벤트 경계 |
 | [controls.html](../tests/browser/controls.html)·[controls-checks.js](../tests/browser/controls-checks.js) | 실제 seed 생성·완료 직전·첫 실패 후 재시도·첫 지연 후 오래된 응답 전달 |
@@ -91,3 +91,5 @@ git rev-parse는 프로젝트와 상위 폴더 모두 Git 저장소가 아니라
 ## 후속 사용자 확인·완료 — 2026-10-26
 
 위는03·04 당시 이력이다. 이후 사용자 전체89개 통과·필수 UI/터치·콘솔 오류 없음·서버 종료 보고로005를 완료했다. 최종 근거는[04 리뷰](review-005.md), 커밋/PR 제안은[05 초안](pr-drafts/task-005.md)을 따른다. 실제 Git 작업은 미실행이다.
+
+> 007 전환 안내: 위 과거 기록의 .js 파일명은 당시 구현을 뜻한다. 소스 링크는 이동한 현재 .ts 파일을 가리키도록 갱신했다. 브라우저 출력은 계속 .js다.
