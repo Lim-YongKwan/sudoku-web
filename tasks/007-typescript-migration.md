@@ -1,12 +1,12 @@
 # 007 Vanilla TypeScript 전환·빌드·검증·Pages 정비
 
-> 04 리뷰·수정과 사용자 로컬 잔여 확인을 수행했다. 커밋 후 깨끗한 checkout·Actions 공개 배포가 남아 완료가 아니다.
+> 04 리뷰·수정·사용자 로컬 확인과 커밋 기반 checkout 재현을 수행했다. 실제 Actions·공개 배포 확인이 남아 완료가 아니다.
 
 - 작업 ID: 007
 - 상태: 진행 중
 - 담당: Codex
 - 담당 브랜치: feat/task-007-typescript-migration
-- 브랜치 상태: 생성·전환 완료. 사용자가 원격 push를 완료했다. 이번 구현 변경은 미커밋·미push다.
+- 브랜치 상태: feat/task-007-typescript-migration의 구현을 e7624b6으로 로컬 커밋했다. 새 detached worktree는 해당 SHA에 고정했다. 이번 구현/후속 기록은 아직 push하지 않았다.
 - 선행 작업: [006 공개 배포](006-github-pages-deployment.md), [001~005·인수 결과](../docs/acceptance/sudoku-mvp.md)
 - 코드 기준: 1c45a8b의 확정 명세·기존 JS 구현. main의 배포 문서·007~013 명세 커밋 후 전용 브랜치에서 구현한다.
 - 작성일 / 마지막 갱신: 2026-10-28 / 2026-10-29
@@ -60,7 +60,7 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 ## 4. 완료 조건
 
 - [x] TS-01: src 원본이 TS로 전환되고 strict 타입 검사·기존 런타임 입력 검증이 함께 동작한다.
-- [ ] TS-02: 깨끗한 checkout에서 npm ci·타입 검사·개발/배포 빌드·start가 재현되고 출력이 분리된다.
+- [x] TS-02: 깨끗한 checkout에서 npm ci·타입 검사·개발/배포 빌드·start가 재현되고 출력이 분리된다.
 - [x] TS-03: 기존 92개 검증 시나리오를 보존하고 최신 컴파일 결과로 전 회귀를 수행한다. 개수 감소/skip은 근거를 기록한다.
 - [x] TS-04: 타입 오류·오래된 출력·누락 자산·서버 경계를 검증하고 실패한 코드를 배포하지 않는다.
 - [ ] TS-05: Actions의 검증된 dist 배포·기존 공개URL·브라우저 게임 회귀를 확인한다.
@@ -119,14 +119,14 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 ## 8. 남은 문제와 차단 요소
 
 - 로컬 테스트 99개 전체 통과·브라우저·터치 에뮬레이션·반응형·완료 dialog·콘솔·서버 종료는 사용자 확인으로 충족했다.
-- 커밋 후 고정된 SHA를 새 worktree에 checkout해 npm ci·타입/개발/배포 빌드·전 회귀·start/종료를 검증한다.
+- e7624b6을 새 worktree에 checkout해 설치·타입/개발/배포 빌드·전 회귀·start/HTTP/종료를 검증했다. 99개 중 98 통과·0 실패·1 Windows 권한 skip이며 사용자 99개 전체 통과 보고와 구분한다.
 - feature push·PR 검증 성공 뒤 main 반영 직전에 Pages 소스를 Actions로 전환한다. 원격 변경은 별도 승인 후 진행한다.
-- 실제 main Actions의 validate/deploy·공개 URL의 새 배포 동작을 확인한다. 그 전에는 TS-02·TS-05·REV-01을 완료로 표시하지 않는다.
+- 실제 main Actions의 validate/deploy·공개 URL의 새 배포 동작을 확인한다. TS-02는 충족했으며 TS-05·REV-01은 실제 배포 확인 전까지 미체크다.
 - 실제 휴대전화/물리 터치는 미검증이며 현재 확인 범위는 에뮬레이션이다. 이를 완료됐다고 확대하지 않는다.
-- 계획과 실행 순서는 04 리뷰 기록의 후속 절차를 따른다. 이번에는 문서만 갱신하며 커밋·push·worktree·원격 변경은 하지 않는다.
+- 이번 요청으로 구현 커밋·새 worktree·재현 검증·후속 문서 커밋을 진행했다. push·PR·병합·Pages 원격 변경은 하지 않는다.
 ## 9. 완료 요약
 
-- 현재 결과: 04 리뷰·수정을 수행했고 사용자 최종 로컬 재확인은 99 통과·0 실패·0 skip이다. 브라우저·터치 에뮬레이션·반응형·완료·콘솔·서버 종료를 확인했다. checkout·Actions 배포 대기로 진행 중이다.
+- 현재 결과: 04 리뷰·수정을 수행했고 사용자 최종 로컬 재확인은 99 통과·0 실패·0 skip이다. 브라우저·터치 에뮬레이션·반응형·완료·콘솔·서버 종료를 확인했다. checkout 재현은 완료했고 Actions 배포 대기로 진행 중이다.
 - 완료일: 미정.
 - PR 초안: 없음. 완료 판단 후05에서 실제 diff·검증 근거로 작성한다.
 ## 04 재검증 결과 — 2026-10-29
@@ -149,3 +149,10 @@ tsc strict·noEmitOnError·명시적module/target/resolution으로ESM .js출력�
 - 이전 검증 서버와 새 개발 서버의 종료 확인은 안내 절차를 수행했다는 사용자 보고로 충족했다.
 - 원시 테스트 로그·브라우저 이름/버전·화면별 수치·스크린샷·종료 PID 목록은 제공되지 않았다.
 - 깨끗한 Git checkout과 실제 Actions/공개 배포는 아직 미실행이다. 007 상태는 진행 중을 유지한다.
+
+## 커밋 기반 checkout 재현 — 2026-10-29
+
+[상세 기록](../docs/checkout-007.md)에 고정 SHA·실제 worktree·명령·권한 재시도·HTTP/종료 결과를 기록했다.
+구현 커밋 e7624b6f1143d9b47074ed5a4ee28403d905d0bb에서 기존 출력/의존성이 없는 상태로 재현했다.
+검증 후에도 해당 worktree의 Git 상태는 깨끗하다. TS-02를 충족했고 실제 Actions/공개 배포 전이라 상태는 진행 중을 유지한다.
+기존 사용자 확인·도구 권한 제약 이력은 보존한다. 이번 구현과 재현 기록은 아직 push하지 않았다.

@@ -4,7 +4,7 @@
 - 대상: [007 작업](../tasks/007-typescript-migration.md), [03 구현 기록](typescript-007.md).
 - 브랜치: feat/task-007-typescript-migration, HEAD 1c45a8b.
 - 기존 03의 미커밋 구현을 보존하고 그 위에서 리뷰·수정했다. 커밋·push·병합·Pages 원격 변경은 없다.
-- 현재 판정: 로컬 리뷰·수정과 사용자 로컬 잔여 검증을 확인했다. 깨끗한 checkout·실제 Actions/공개 배포 대기로 전체 완료를 보류한다. 아래 도구 중단과 초기 검사는 당시 이력이다.
+- 현재 판정: 로컬 리뷰·사용자 확인과 e7624b6의 깨끗한 checkout 재현을 마쳤다. 실제 Actions/공개 배포 대기로 전체 완료를 보류한다. 아래 초기 도구 중단과 당시 미실행 기록은 이력이다.
 
 ## 발견 사항과 수정
 
@@ -62,7 +62,7 @@ CIM 조회는 권한으로 실패했고, 후속 Get-Process에서는 PID가 보�
 | 조건 | 판정 |
 |---|---|
 | TS-01 / TS-03 / TS-04 | 로컬 타입·런타임·기존 회귀·빌드 실패 경계 검증 충족 |
-| TS-02 | 새 입력 디렉터리 재현은 03에서 성공. 커밋 후 깨끗한 Git checkout 검증은 아직 |
+| TS-02 | e7624b6의 새 detached worktree에서 설치·타입/빌드·99개 검사(98 통과·1 권한 skip)·start/HTTP/종료 재현 완료 |
 | TS-05 | 로컬 브라우저·터치 에뮬레이션은 사용자 확인. 실제 Actions·Pages 공개 배포 대기 |
 | TS-06 / DOC-01 | 로컬 반영과 원격 미반영을 구분해 갱신. 최종 문서 링크·ID 검사 결과를 아래에 기록 |
 | REV-01 | 리뷰와 발견 문제 수정은 수행했으나 모든 필수 확인이 충족되지 않아 미체크 유지 |
@@ -104,3 +104,9 @@ CIM 조회는 권한으로 실패했고, 후속 Get-Process에서는 PID가 보�
 
 문서만 후속 커밋한 경우 코드 검증 결과를 그대로 인정할 수 있지만, 게임 코드·의존성·타입/빌드/workflow 설정이 바뀌면 영향받는 checkout/CI 검증을 다시 수행한다.
 GitHub 공식 참고: [custom Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## 커밋 기반 재현 후속 — 2026-10-29
+
+사용자 승인으로 구현 커밋 e7624b6을 저장하고 새 worktree에서 재현 검증했다. [checkout 기록](checkout-007.md)을 따른다.
+TS-02는 충족했다. 위 계획의 커밋/checkout 단계는 실행됐으며, 원격 push·PR·Pages 전환·실제 Actions/공개 URL 확인은 여전히 미실행이다.
+후속 변경은 재현 결과 문서만이며 게임 코드·의존성·빌드/workflow를 바꾸지 않았다.
