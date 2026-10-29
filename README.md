@@ -2,10 +2,10 @@
 
 ## 현재 상태
 
-001~007 완료. 게임 원본은 strict TypeScript이며 컴파일된 Native ESM을 브라우저에서 실행한다.
-PR #1을 main(ebb3bfb)에 병합하고 GitHub Actions의 검증된 dist로 Pages 배포를 마쳤다. main CI는 99 통과·0 실패·0 skip이다.
-[공개 게임](https://lim-yongkwan.github.io/sudoku-web/)의 보드·입력·새 게임·타이머 정상 동작은 사용자가 확인했다. 도구의 직접 접속은 저장된 권한 설정으로 차단됐다.
-[최종 배포 기록](docs/deployment-007.md)에 사용자 확인과 도구 관찰을 구분했다. 아래 단계별 과거 기록은 당시 이력이다. 완료 문서는 후속 요청에 따른 main 문서 커밋으로 공유한다.
+001~008 완료. 게임 원본은 strict TypeScript이며 컴파일된 Native ESM을 브라우저에서 실행한다.
+PR #2를 main a59dd56에 병합해 부드러운형 숫자 디자인과 완료 후 단서 배경 보존을 공개 배포했다. main Actions40807127859의validate/deploy가 성공했고 테스트105개가 모두 통과했다.
+[공개 게임](https://lim-yongkwan.github.io/sudoku-web/)의 새 숫자 디자인 정상 적용은 사용자가 확인했다. 도구 직접 공개 사이트 접속은 저장된 접근 제한으로 미실행이다.
+[008 최종 배포 기록](docs/deployment-008.md)에 사용자 확인과 도구 검증을 구분했다. 009~013은 예정이며 이번 요청은 완료 문서의main 커밋·push만 수행한다. 아래 단계별 과거 기록은 당시 이력이다.
 
 ## 실행 환경
 

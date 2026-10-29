@@ -4,7 +4,7 @@
 - 대상: [008 부드러운형 숫자 디자인](../../tasks/008-number-typography.md) — 완료
 - head: feat/task-008-number-typography / base: main
 - 비교 기준: 로컬 main·HEAD f21e6fb5cfb1f40ca904b935a8a739916b11f0a2 대비 추적 파일의 작업 트리 diff와008 신규 파일을 함께 확인했다.
-- 상태: 05에서 작성한 로컬 초안. 이후 사용자 승인으로 구현·완료 문서와 함께 이번 로컬 커밋에 저장한다. push·PR 생성·병합은 미실행이다. 원격 main의 추가 변경 여부는 조회하지 않았다.
+- 현재 상태: 구현1ec138c push 후 [PR #2](https://github.com/Lim-YongKwan/sudoku-web/pull/2)를main a59dd56에 병합했다. 실제 Actions 배포·사용자 공개 새 디자인 확인 완료. 아래05 메시지/본문은 작성 당시 초안으로 보존한다.
 
 ## 권장 커밋 메시지
 
@@ -72,3 +72,7 @@ feat(ui): 스도쿠 숫자를 부드러운형 디자인으로 개선
 - [구현 기록](../typography-008.md)·[04 리뷰·사용자 최종 확인](../review-008.md)
 - [D-005](../decisions/005-assistance-highlights-and-undo.md) — 이번에는 숫자 디자인만 완료
 - [현재 구조](../../architecture.md)·[후속 계약](../plans/sudoku-next-iteration.md)
+
+## 실제 PR·배포 후속 — 2026-10-29
+
+[최종 배포 기록](../deployment-008.md): PR #2 main 병합·Actions40807127859 validate/deploy 성공·105개 전체 통과·사용자 공개 숫자 디자인 정상 보고를 확인했다. PR 실제 본문은 사용자가 생성 시 입력했다. 초안의 미실행 표현은 당시 이력이며 이번에는 완료 문서를main 커밋·push로 공유한다. 009 구현은 하지 않는다.
