@@ -4,7 +4,7 @@
 - 대상: [009 숫자 스톡·보조 옵션 기반](../../tasks/009-digit-stock-options.md) — 완료
 - head: feat/task-009-digit-stock-options / base: main
 - 비교 기준: 로컬 main·HEAD17ab0077bce374978e60e2790aac3e7db3e05204 대비 추적 파일의 작업 트리 diff와009 신규 파일을 함께 확인했다.
-- 상태: 05에서 작성한 로컬 초안. 이후 사용자 승인으로 구현·완료 문서와 함께 이번 로컬 커밋에 저장한다. push·PR 생성·병합은 미실행이며 원격 main 추가 변경 여부는 조회하지 않았다.
+- 현재 상태: 구현053b32d push 후 [PR #3](https://github.com/Lim-YongKwan/sudoku-web/pull/3)를main ebfb5b3에 병합했다. Actions 배포·사용자 공개 스톡/초기화 확인 완료. 아래05 메시지/본문은 작성 당시 초안으로 보존한다.
 
 ## 권장 커밋 메시지
 
@@ -76,3 +76,7 @@ GameState 주입 코드는 assistance 두 boolean이 필요하다. 기본 생성
 - [구현 기록](../stock-009.md)·[04 리뷰와 사용자 최종 확인](../review-009.md)
 - [D-005](../decisions/005-assistance-highlights-and-undo.md) — 숫자 디자인·스톡·옵션 기반까지 적용
 - [현재 구조](../../architecture.md)·[후속 계약](../plans/sudoku-next-iteration.md)
+
+## 실제 PR·배포 후속 — 2026-10-29
+
+[최종 기록](../deployment-009.md): PR #3 main 병합·Actions40824921514 validate/deploy 성공·119개 전체 통과·사용자 공개 스톡/초기화 정상 확인을 기록했다. 초안의 미실행 문구는 당시 이력이며 이번에는 완료 문서를main 커밋·push로 공유한다. 010 구현은 하지 않는다.
