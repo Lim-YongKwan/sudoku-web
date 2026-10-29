@@ -4,7 +4,7 @@
 - 대상: [011 셀 선택 기준 같은 숫자 강조](../../tasks/011-matching-digit-highlight.md) — 완료
 - head: feat/task-011-matching-digit-highlight / base: main
 - 비교 기준: main에서 분기한 HEAD 1dda61da75cbd786df93f35be6e90fffbc067f4b 대비 작업 트리 diff와 신규 파일을 함께 검토했다.
-- 상태: 구현·검사·완료 문서는 로컬 변경이다. 커밋·push·PR 생성·원격 CI·병합·배포는 미실행.
+- 상태: 구현 커밋 1d03c53 push 완료, [PR #5](https://github.com/Lim-YongKwan/sudoku-web/pull/5) main 4a2edad 병합 완료. Actions 검증·배포와 사용자 공개 확인도 완료했다. 아래 제목·본문은 05 작성 당시 초안이다.
 
 ## 권장 커밋 메시지
 
@@ -72,3 +72,9 @@ feat(game): 셀 선택 기준 같은 숫자 강조 옵션 구현
 - [현재 구조](../../architecture.md)·[후속 계약](../plans/sudoku-next-iteration.md)
 
 별도 요청 후 커밋·push·main 대상 PR·CI 검증을 진행한다. 로컬 완료는 병합·배포 완료가 아니다. 기본 브랜치 반영 후012를 별도 브랜치에서 시작한다.
+
+## 011 병합·배포·공개 확인 — 2026-10-29
+
+011은 구현 1d03c53을 PR #5로 main 4a2edad에 병합했고, Actions 40843161441의 validate/deploy 성공·145개 전체 통과와 사용자 공개 화면의 같은 숫자 강조·옵션 초기화 정상 확인까지 마쳤다. 012~013은 예정이며 구현하지 않았다.
+
+[최종 배포 기록](../deployment-011.md)에 PR/병합 커밋·Actions 검증·사용자 공개 확인 근거를 모았다. 공개 동작은 사용자 보고이며 도구 직접 관찰과 구분한다. 이전 미커밋·미배포·확인 대기 문구는 각 단계 당시 이력이다. 이번 후속 변경은 문서만 main에서 커밋·push하는 작업이다.

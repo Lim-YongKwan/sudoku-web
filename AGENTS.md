@@ -9,14 +9,14 @@
 - Node.js 22 이상은 로컬 정적 HTTP 서버·내장 node:test/assert·타입 검사·빌드에 사용한다. 게임 백엔드는 없다. 007에서는 src만 TS로 옮기고 scripts·테스트·fixture는 JS로 유지한다.
 - 개발 환경 기준: Node.js 22 이상. 기본 PATH의 v16.20.2는 기준 미충족이다. 기존 Node v24.22.1로 검증했으며 새 세션에서 README의 실행 경로를 선택한다. 전역 PATH는 바꾸지 않았다.
 - 현재 경로: tasks/는 작업 원본·목록, docs/decisions/는 결정 원본·목록, docs/review-checklist.md는 코드 리뷰 기준이다.
-- 현재 원본은 src/main.ts·src/types.ts·core/ui/utils의 .ts다. scripts와 테스트/fixture는 JS를 유지한다. .build의 컴파일 결과를 서버와 회귀 검사가 사용한다. 001~010 완료·PR #4 병합·실제공개배포상태는작업목록·architecture·docs/deployment-010.md를따른다.
+- 현재 원본은 src/main.ts·src/types.ts·core/ui/utils의 .ts다. scripts와 테스트/fixture는 JS를 유지한다. .build의 컴파일 결과를 서버와 회귀 검사가 사용한다. 001~011 완료·PR #5 병합·실제 공개 배포 상태는 작업 목록·architecture.md·docs/deployment-011.md를 따른다.
 - core는 DOM을 참조하지 않는다. 사용자 이벤트 → Action → 상태 갱신 → Render → DOM 흐름이며 렌더러는 상태를 직접 변경하지 않는다.
 - 데이터·함수·이벤트 계약은 [스도쿠 MVP 설계](docs/plans/sudoku-mvp.md)를 기준으로 한다. 설계가 작성됐어도 코드가 구현된 것으로 간주하지 않는다.
 - .build/는 개발용 컴파일·정적 출력, dist/는 게임 전용 배포 출력이다. node_modules와 두 출력을 Git에서 제외하고 직접 편집하지 않는다. 작업·결정 원본은 보존한다.
 
 ## 개발 명령어
 
-- 007 전환 완료: 아래 명령·타입/출력 규칙을 적용했고009까지 main 검증·공개 배포를 완료했다. 실제 결과는 tasks/007-typescript-migration.md와 docs/typescript-007.md에 기록한다. 아직 실행하지 않은 검증은 통과로 표시하지 않는다.
+- 007 전환 완료: 아래 명령·타입/출력 규칙을 적용했고 011까지 main 검증·공개 배포를 완료했다. 실제 결과는 tasks/007-typescript-migration.md와 docs/typescript-007.md에 기록한다. 아직 실행하지 않은 검증은 통과로 표시하지 않는다.
 - 설치: npm ci. 고정 TypeScript 개발 의존성과 package-lock.json을 사용한다. 전역 설치·PATH 영구 변경을 요구하지 않는다.
 - 타입 검사: npm run typecheck (tsc --noEmit). strict·noEmitOnError를 유지한다.
 - 개발 빌드: npm run build:dev. 깨끗한 .build에 컴파일된 src와 HTML/CSS·개발 fixture를 준비한다.
@@ -79,7 +79,7 @@
 - 03은 지정 태스크 하나 구현, 04는 검증·리뷰·완료 판단, 05는 커밋·PR 초안 준비다. 태스크마다 이 순서를 반복한다. 03에서는 완료 처리하지 않는다.
 - 06은 전체 인수 검증이며, 중단 작업은 07로 같은 기록을 보존하며 재개하고 04 리뷰로 연결한다.
 - 브랜치는 feat/task-<작업ID>-<짧은이름>, 커밋은 Conventional Commits를 사용한다. 기본 브랜치는 Git 저장소가 준비된 뒤 실제 설정에서 확인한다.
-- 현재 프로젝트는 독립 Git 저장소이며 기본 브랜치는 main이다. 001~005와 인수 기록은 최초 스냅샷으로 저장했고, 007은 feature 브랜치와 PR #1을 거쳐 main에 병합했다. Pages 소스는 GitHub Actions이며 현재배포/검증은architecture.md와docs/deployment-010.md를따른다. 이전 Git 미실행 기록은 당시 이력이다.
+- 현재 프로젝트는 독립 Git 저장소이며 기본 브랜치는 main이다. 001~005와 인수 기록은 최초 스냅샷으로 저장했고, 007은 feature 브랜치와 PR #1을 거쳐 main에 병합했다. Pages 소스는 GitHub Actions이며 현재 배포/검증은 architecture.md와 docs/deployment-011.md를 따른다. 이전 Git 미실행 기록은 당시 이력이다.
 - 기본 흐름은 선행 코드가 기본 브랜치에 반영된 후 다음 작업을 시작하는 순차 개발이다. 별도 브랜치가 병렬 개발 가능을 뜻하지 않는다.
 - 커밋·푸시·PR 생성·병합은 해당 요청에서 승인된 범위만 수행한다. 초안 작성 요청을 실제 Git·원격 쓰기 요청으로 해석하지 않는다.
 - 공통 코드 리뷰 기준은 docs/review-checklist.md, 실제 리뷰 결과는 해당 작업 문서에 기록한다. 원본 묶음의 REVIEW.md는 코드 리뷰 기준으로 사용하지 않는다.
