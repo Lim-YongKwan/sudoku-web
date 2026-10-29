@@ -124,3 +124,8 @@ dialog h2 { margin-top:0; font-size:1.3rem; }
   text-underline-offset: .12em;
 }
 .board-legend .legend-recent { border-bottom: 3px solid #985619; }
+
+/* Matching fills preserve clue distinction, selected cell, conflict border and focus ring. */
+.sudoku-cell.is-matching { background: #eaf2f8; }
+.sudoku-cell.is-matching.is-clue { background: #dce8ee; }
+.sudoku-cell.is-matching.is-selected { background: #caddc6; }
