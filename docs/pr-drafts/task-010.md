@@ -4,7 +4,7 @@
 - 대상: [010 최근 입력 지속 표시](../../tasks/010-last-input-highlight.md) — 완료
 - head: feat/task-010-last-input-highlight / base: main
 - 비교 기준: main에서 분기한 HEAD 0f5e5c288bd968229572fd74bf8d0c00bff3d933 대비 작업 트리 diff와 신규 파일을 함께 검토했다.
-- 상태: 로컬 구현·문서 완료, 미커밋·미push. PR 생성·원격 CI·병합·배포는 미실행.
+- 현재 상태: 구현5cff1b7 push·PR #4 main 4082186 병합·Actions40833855921 배포·사용자공개확인완료. 아래05메시지/본문은작성당시초안이며[최종기록](../deployment-010.md)을따른다.
 
 ## 권장 커밋 메시지
 
@@ -74,3 +74,7 @@ GameState를 직접 주입하는 코드는 lastInputIndex:null 또는 유효한 
 - [03 구현](../last-input-010.md)·[04 리뷰와 사용자 최종 확인](../review-010.md)
 - [D-005](../decisions/005-assistance-highlights-and-undo.md) — 최근 입력까지 부분 적용
 - [현재 구조](../../architecture.md)·[후속 계약](../plans/sudoku-next-iteration.md)
+
+## 010 병합·배포·공개 확인 — 2026-10-29
+
+[최종기록](../deployment-010.md): 010은 구현5cff1b7을PR #4로main 4082186에병합했고Actions40833855921 validate/deploy 성공·133개전체통과·사용자공개최근입력지속표시정상확인까지마쳤다. 011~013은예정이며시작하지않았다. 공개게임동작은사용자보고이고GitHub병합·Actions성공/로그는도구확인이다. 이전미커밋/미배포문구는당시이력이다. 이번요청은완료문서만main에서커밋·push하며기능코드는변경하지않는다.

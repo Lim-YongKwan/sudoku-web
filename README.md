@@ -2,10 +2,10 @@
 
 ## 현재 상태
 
-001~010 로컬 완료(공개 배포는009까지). 게임 원본은strict TypeScript이며 컴파일된Native ESM을브라우저에서 실행한다.
-PR #3을main ebfb5b3에 병합해 숫자 스톡·보조 옵션 기반을 공개 배포했다. [Actions40824921514](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40824921514)의validate/deploy가 성공했고119개 검사가 모두 통과했다.
-[공개 게임](https://lim-yongkwan.github.io/sudoku-web/)의 스톡 표시·입력·옵션 초기화는 사용자가 정상 확인했다. 도구 직접 접속은 저장된 접근 제한으로 미실행이다.
-[009 최종 배포 기록](docs/deployment-009.md)에 사용자 보고와 도구 검증을 구분했다. 010은 feat/task-010-last-input-highlight에서04 리뷰·보완·사용자133개 전체 통과/필수 UI 확인으로 완료했다. [010 최종 리뷰](docs/review-010.md)와 [05 초안](docs/pr-drafts/task-010.md)을 따른다. 011~013은 예정이며010 변경은 미커밋·미배포다. 아래 과거 단계 기록은 당시 이력이다.
+001~010 완료·공개 배포 확인. 게임 원본은strict TypeScript이며 컴파일된Native ESM을브라우저에서 실행한다.
+PR #4를main 4082186에병합해최근입력지속표시를공개배포했다. [Actions40833855921](https://github.com/Lim-YongKwan/sudoku-web/actions/runs/40833855921)의validate/deploy 성공·133개전체통과를확인했다.
+[공개게임](https://lim-yongkwan.github.io/sudoku-web/)의최근입력지속표시는사용자가정상확인했다. 도구직접접속은저장된접근제한으로차단되어사용자보고와구분한다.
+[010 최종 배포 기록](docs/deployment-010.md), [최종 리뷰](docs/review-010.md), [05 초안](docs/pr-drafts/task-010.md)을따른다. 011~013은예정이며이번요청은완료문서를main에서커밋·push한다. 아래이력은당시기록이다.
 
 ## 실행 환경
 
